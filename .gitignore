@@ -1,0 +1,8 @@
+bin/
+/FOOL.interp
+/FOOL.tokens
+/FOOLLexer.interp
+/FOOLLexer.java
+/FOOLLexer.tokens
+/FOOLParser.java
+
