@@ -37,13 +37,15 @@ public class FunNode implements Node, DecNode {
         for (Node par : parlist) {
             parlstr += par.toPrint(s + "  ");
         }
-        ;
         String declstr = "";
         for (Node dec : declist) {
             declstr += dec.toPrint(s + "  ");
         }
-        ;
-        return s + "Fun:" + id + "\n" + type.toPrint(s + "  ") + parlstr + declstr + exp.toPrint(s + "  ");
+        return s + "Fun:" + id + "\n" 
+            + type.toPrint(s + "  ") 
+            + parlstr 
+            + declstr 
+            + exp.toPrint(s + "  ");
     }
 
     public Node typeCheck() {

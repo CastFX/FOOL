@@ -2,30 +2,30 @@ package ast;
 
 public class STentry {
 
-    private int nl;
+    private int nestingLevel;
     private Node type;
     private int offset;
     private boolean isMethod;
 
     public STentry(int n, int os) {
-        nl = n;
+        nestingLevel = n;
         offset = os;
     }
 
     public STentry(int n, int os, boolean isMethod) {
-        nl = n;
+        nestingLevel = n;
         offset = os;
         this.isMethod = isMethod;
     }
 
     public STentry(int n, Node t, int os) {
-        nl = n;
+        nestingLevel = n;
         type = t;
         offset = os;
     }
 
     public STentry(int n, Node t, int os, boolean isMethod) {
-        nl = n;
+        nestingLevel = n;
         type = t;
         offset = os;
         this.isMethod = isMethod;
@@ -44,7 +44,7 @@ public class STentry {
     }
 
     public int getNestinglevel() {
-        return nl;
+        return nestingLevel;
     }
 
     public boolean isMethod() {
@@ -52,7 +52,7 @@ public class STentry {
     }
 
     public String toPrint(String s) {
-        return s + "STentry: nestlev " + Integer.toString(nl) + "\n" + s + "STentry: type\n " + type.toPrint(s + "  ")
+        return s + "STentry: nestlev " + Integer.toString(nestingLevel) + "\n" + s + "STentry: type\n " + type.toPrint(s + "  ")
                 + s + "STentry: offset " + offset + "\n";
     }
 
