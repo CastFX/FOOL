@@ -4,14 +4,12 @@ public class EmptyNode implements Node {
 
     @Override
     public String toPrint(String indent) {
-        // TODO Auto-generated method stub
-        return null;
+        return indent + "EmptyNode\n";
     }
 
     @Override
     public Node typeCheck() {
-        // TODO Auto-generated method stub
-        return null;
+        return new EmptyTypeNode();
     }
 
     @Override

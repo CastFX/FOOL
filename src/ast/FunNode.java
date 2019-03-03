@@ -8,9 +8,7 @@ public class FunNode implements Node, DecNode {
 
     private String id;
     private Node type;
-    private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist"
-                                                             // che � lista di
-                                                             // Node
+    private ArrayList<Node> parlist = new ArrayList<Node>();
     private ArrayList<Node> declist = new ArrayList<Node>();
     private Node exp;
     private Node symType;
@@ -18,6 +16,12 @@ public class FunNode implements Node, DecNode {
     public FunNode(String i, Node t) {
         id = i;
         type = t;
+    }
+    
+    public FunNode(String i, Node t, Node st) {
+        id = i;
+        type = t;
+        symType = st;
     }
 
     public void addDec(ArrayList<Node> d) {
@@ -52,9 +56,8 @@ public class FunNode implements Node, DecNode {
         for (Node dec : declist) {
             dec.typeCheck();
         }
-        ;
         if (!FOOLlib.isSubtype(exp.typeCheck(), type)) {
-            System.out.println("Incompatible value for variable");
+            System.out.println("Incompatible value for variable in function");
             System.exit(0);
         }
         return null;

@@ -51,6 +51,23 @@ public class STentry {
         return isMethod;
     }
 
+    //TODO Chiedere se per la copia devo creare copie anche dei tipi
+    public STentry deepCopy() {
+        Node typeCopy = null;
+        if (type instanceof BoolTypeNode) {
+            typeCopy = new BoolTypeNode();
+        }
+        else if (type instanceof IntTypeNode) {
+            typeCopy = new IntTypeNode();
+        }
+        else if (type instanceof RefTypeNode) {
+            typeCopy = new RefTypeNode(((RefTypeNode)type).getId());
+        } else if (type instanceof ArrowTypeNode) {
+            typeCopy = new ArrowTypeNode(((ArrowTypeNode)type).getParList(), ((ArrowTypeNode)type).getRet());
+        }
+        return new STentry(nestingLevel, typeCopy, offset, isMethod);
+    }
+    
     public String toPrint(String s) {
         return s + "STentry: nestlev " + Integer.toString(nestingLevel) + "\n" + s + "STentry: type\n " + type.toPrint(s + "  ")
                 + s + "STentry: offset " + offset + "\n";

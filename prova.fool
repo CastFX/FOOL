@@ -1,29 +1,21 @@
 let
-  var y:int = 5+2;
-  fun f:bool (n:int, m:int)
-    let 
-      var x:int = m;
-  in x==y;   
-in  
-  print ( 
-    if f(y,8) 
-      then { false }
-      else { 10 }
-  ); 
+  class A (f:int, b:bool) {
+    fun first:int() f;
+    fun second:bool() b; 
+  }
+  class B (f:int, b:bool) {
+    fun first:int() f;
+    fun second:bool() b; 
+  }
   
-/* SERBATOIO ESEMPI
-let 
-  var x:int = 1;
-  var b:bool = true;
-in
-  print (if (b) then { x+1 } else { x+2 });
----------------
-let 
-  fun f:int (i:int, j:int) i+j;
-in
-  print (f(3,5));
-----------------
-let
+  class C extends A (c:int){
+	fun C:int() 8;
+	fun D:bool() true;
+  }
+  
+  var s:C = new C(1,true,1);
+  var t:A = new C(2,false,2);
+  
   var y:int = 5+2;
   fun f:bool (n:int, m:int)
     let 
@@ -31,8 +23,7 @@ let
   in x==y;   
 in  
   print ( 
-    if f(y,8) 
-      then { false }
-      else { 10 }
+    if f(s.first(),y) 
+      then { s.second()	 }
+      else { s.C() }
   ); 
-*/

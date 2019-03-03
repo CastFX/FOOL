@@ -23,18 +23,21 @@ public class ClassCallNode implements Node {
     public String toPrint(String s) {
         String parlstr = "";
         for (Node par : parlist) {
+            System.out.println(par.getClass());
             parlstr += par.toPrint(s + "  ");
         }
-        ;
-        return s + "Call:" + id + " at nestinglevel " + nestingLevel + "\n" + entry.toPrint(s + "  ") + parlstr;
+        return s + "Method Call:" + id + " at nestinglevel " + nestingLevel + "\n" 
+            + entry.toPrint(s + "  ") 
+            + (methodEntry == null ? methodEntry.toPrint(s + "  ") : "") 
+            + parlstr;
     }
 
     public Node typeCheck() {
         ArrowTypeNode t = null;
-        if (entry.getType() instanceof ArrowTypeNode)
-            t = (ArrowTypeNode) entry.getType();
+        if (methodEntry != null && methodEntry.getType() instanceof ArrowTypeNode)
+            t = (ArrowTypeNode) methodEntry.getType();
         else {
-            System.out.println("Invocation of a non-function " + id);
+            System.out.println("Invocation of a non-function " + id + ",instead: " + methodEntry.getType());
             System.exit(0);
         }
         ArrayList<Node> p = t.getParList();

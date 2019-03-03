@@ -12,10 +12,11 @@ public class MethodNode implements Node, DecNode {
     private ArrayList<Node> declist = new ArrayList<Node>();
     private Node exp;
     private Node symType;
-
-    public MethodNode(String i, Node t) {
+    
+    public MethodNode(String i, Node t, Node st) {
         id = i;
         type = t;
+        symType = st;
     }
 
     public void addDec(ArrayList<Node> d) {
@@ -43,7 +44,7 @@ public class MethodNode implements Node, DecNode {
         }
         ;
         return indent 
-                + "M_Fun:" + id + "\n" 
+                + "Method:" + id + "\n" 
                 + type.toPrint(indent + "  ") 
                 + parlstr 
                 + declstr 
@@ -55,9 +56,8 @@ public class MethodNode implements Node, DecNode {
         for (Node dec : declist) {
             dec.typeCheck();
         }
-        ;
         if (!FOOLlib.isSubtype(exp.typeCheck(), type)) {
-            System.out.println("Incompatible value for variable");
+            System.out.println("Incompatible value for variable in method");
             System.exit(0);
         }
         return null;

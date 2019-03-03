@@ -1,5 +1,7 @@
 package ast;
 
+import lib.FOOLlib;
+
 public class IdNode implements Node {
 
     private String id;
@@ -19,6 +21,10 @@ public class IdNode implements Node {
     public Node typeCheck() {
         if (entry.getType() instanceof ArrowTypeNode) {
             System.out.println("Wrong usage of function identifier");
+            System.exit(0);
+        }
+        if (FOOLlib.existsClass(id)) {
+            System.out.println("ID exists already as class name");
             System.exit(0);
         }
         return entry.getType();
