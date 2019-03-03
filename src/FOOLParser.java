@@ -288,7 +288,6 @@ public class FOOLParser extends Parser {
 
 						ClassTypeNode ctn = new ClassTypeNode(new ArrayList<Node>(), new ArrayList<Node>());
 				        HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
-						boolean extending = false;
 						STentry superEntry = null;
 						String superId = "";
 					
@@ -299,7 +298,6 @@ public class FOOLParser extends Parser {
 					setState(45); match(EXTENDS);
 					setState(46); ((CllistContext)_localctx).i2 = match(ID);
 
-							extending = true;
 							superId = (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null);
 							if (!symTable.get(0).containsKey((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null)) || !classTable.containsKey((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null))) {
 								System.out.println("Super class " + (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null) + " at line: " + (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getLine():0) + " does not exist");
@@ -329,16 +327,6 @@ public class FOOLParser extends Parser {
 				}
 
 
-				        if (extending) {
-				        	if (!classTable.containsKey((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null))) {
-				        		System.out.println("Super class " + (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null) + " not present in classTable");
-				        		System.exit(0);
-				        	}
-				        	HashMap<String, STentry> exVirtualTable = classTable.get((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null));
-				        	for (String key : exVirtualTable.keySet()) {
-				        		virtualTable.put(key, exVirtualTable.get(key).deepCopy());
-				        	}
-				        }
 				        nestingLevel++;
 				        symTable.add(virtualTable);
 				        classTable.put((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), virtualTable);

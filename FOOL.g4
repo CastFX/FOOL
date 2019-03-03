@@ -43,12 +43,10 @@ cllist returns [ArrayList<Node> astlist]
 	( CLASS i=ID {
 		ClassTypeNode ctn = new ClassTypeNode(new ArrayList<Node>(), new ArrayList<Node>());
         HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
-		boolean extending = false;
 		STentry superEntry = null;
 		String superId = "";
 	}
 	(EXTENDS i2=ID {
-		extending = true;
 		superId = $i2.text;
 		if (!symTable.get(0).containsKey($i2.text) || !classTable.containsKey($i2.text)) {
 			System.out.println("Super class " + $i2.text + " at line: " + $i2.line + " does not exist");
@@ -76,16 +74,6 @@ cllist returns [ArrayList<Node> astlist]
 	}
 		
 	)? {
-        if (extending) {
-        	if (!classTable.containsKey($i2.text)) {
-        		System.out.println("Super class " + $i2.text + " not present in classTable");
-        		System.exit(0);
-        	}
-        	HashMap<String, STentry> exVirtualTable = classTable.get($i2.text);
-        	for (String key : exVirtualTable.keySet()) {
-        		virtualTable.put(key, exVirtualTable.get(key).deepCopy());
-        	}
-        }
         nestingLevel++;
         symTable.add(virtualTable);
         classTable.put($i.text, virtualTable);
