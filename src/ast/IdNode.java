@@ -32,22 +32,15 @@ public class IdNode implements Node {
 
     public String codeGeneration() {
         String getAR = "";
+        System.out.println("IdNode: " + id + ",offset=" + entry.getOffset() + ",entryNL=" + entry.getNestinglevel() + ",NL=" + nestingLevel);
         for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
             getAR += "lw\n";
-        return "push " + entry.getOffset() + "\n" + "lfp\n" + getAR + // risalgo
-                                                                      // la
-                                                                      // catena
-                                                                      // statica
-                                                                      // per
-                                                                      // ottenere
-                                                                      // l'indirizzo
-                                                                      // dell'AR
-                                                                      // in cui
-                                                                      // �
-                                                                      // dichiarata
-                                                                      // la
-                                                                      // variabile
-        "add\n" + "lw\n";
+        return "/*IdNode: " + id + "*/\n" +
+                "push " + entry.getOffset() + "\n" 
+                    + "lfp\n" 
+                    + getAR // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la variabile
+                    + "add\n" 
+                    + "lw\n";
     }
 
 }

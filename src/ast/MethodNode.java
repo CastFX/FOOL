@@ -12,9 +12,12 @@ public class MethodNode implements Node, DecNode {
     private ArrayList<Node> declist = new ArrayList<Node>();
     private Node exp;
     private Node symType;
+    private String label;
+    private int offset;
     
-    public MethodNode(String i, Node t, Node st) {
+    public MethodNode(String i, int off, Node t, Node st) {
         id = i;
+        offset = off;
         type = t;
         symType = st;
     }
@@ -37,7 +40,6 @@ public class MethodNode implements Node, DecNode {
         for (Node par : parlist) {
             parlstr += par.toPrint(indent + "  ");
         }
-        ;
         String declstr = "";
         for (Node dec : declist) {
             declstr += dec.toPrint(indent + "  ");
@@ -65,12 +67,43 @@ public class MethodNode implements Node, DecNode {
 
     @Override
     public String codeGeneration() {
-        // TODO Auto-generated method stub
-        return null;
+        label = FOOLlib.freshFunLabel();
+        String declCode = "";
+        for (Node dec : declist)
+            declCode += dec.codeGeneration();
+        String popDecl = "";
+        for (Node dec : declist)
+            popDecl += "pop\n";
+        String popParl = "";
+        for (Node par : parlist)
+            popParl += "pop\n";
+        FOOLlib.putCode("/*MethodNode: " + id + "*/\n" +
+                label + ":\n" + 
+                "cfp\n" + // setta $fp a $sp
+                "lra\n" + // inserisce return address
+                declCode + // inresisce dichiarazioni locali
+                exp.codeGeneration() + "srv\n" + // pop del return value
+                popDecl + // pop delle dichiarazioni
+                "sra\n" + // pop del return address
+                "pop\n" + // pop di AL
+                popParl + // pop dei parametri
+                "sfp\n" + // setto $fp al valore del CL
+                "lrv\n" + // risultato della funzione sullo stack
+                "lra\n" + "js\n" // salta a $ra
+        );
+        return "";
     }
 
     @Override
     public Node getSymType() {
         return symType;
+    }
+    
+    public String getLabel() {
+        return label;
+    }
+    
+    public int getOffset() {
+        return offset;
     }
 }

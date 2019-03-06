@@ -57,25 +57,37 @@ public class ClassCallNode implements Node {
         String parCode = "";
         for (int i = parlist.size() - 1; i >= 0; i--)
             parCode += parlist.get(i).codeGeneration();
-        String getAR = "";
+        String getObjectAR = "";
         for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
-            getAR += "lw\n";
-        return "lfp\n" + // Contro Link
-                parCode + // allocazione valori parametri
-                "lfp\n" + getAR + // risalgo la catena statica per ottenere
-                                  // l'indirizzo dell'AR
-                                  // in cui � dichiarata la funzione (Access
-                                  // Link)
-        "push " + entry.getOffset() + "\n" + "lfp\n" + getAR + // risalgo la
-                                                               // catena statica
-                                                               // per ottenere
-                                                               // l'indirizzo
-                                                               // dell'AR
-                                                               // in cui �
-                                                               // dichiarata la
-                                                               // funzione
-                                                               // (Access Link)
-        "add\n" + "lw\n" + // carica sullo stack l'indirizzo della funzione
-                "js\n"; // effettua il salto
+            getObjectAR += "lw\n";
+        
+        String getObjectPointer = "/*Risalita AR*/\n"
+                + "lfp\n"
+                + getObjectAR // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la variabile
+                + "push " + entry.getOffset() + "\n" 
+                + "add\n" 
+                + "lw\n";
+
+        return "\nClassCallNode: " + id + ":\n" +
+                "lfp\n" + //ControlLink
+                parCode +
+                getObjectPointer +
+                getObjectPointer + 
+                "lw\n" + //gets DispatchPointer Address
+                "lw\n" + //gets Dispatch Pointer = Address of First Method
+                "push " + (methodEntry.getOffset()) + "\n" + //Address of the called Method
+                "add\n" +
+                //"lw\n" +
+                "js\n"
+                ;
+//        return "lfp\n" + getAR +        // risalgo la catena statica per ottenere l'indirizzo dell'AR 
+//                                        //in cui è dichiarata la funzione (Access Link)
+//                "push " + (methodEntry.getOffset()) + "\n" +
+//                                        // risalgo la catena statica per ottenere l'indirizzo 
+//                                        //dell'AR in cui è dichiarata la funzione (Access Link)
+//                "lfp\n" + getAR + 
+//                "add\n" + 
+//                "sw\n"       
+//                ;
     }
 }

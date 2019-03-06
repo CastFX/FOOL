@@ -16,6 +16,7 @@ public class ProgLetInNode implements Node {
         exp = e;
     }
 
+    
     public String toPrint(String s) {
         String clslstr = "";
         for (Node cls : classlist) {
@@ -39,9 +40,21 @@ public class ProgLetInNode implements Node {
 
     public String codeGeneration() {
         String declCode = "";
+        String classCode = "";
+        for (Node cl : classlist) {
+            classCode += cl.codeGeneration();
+        }
         for (Node dec : declist)
             declCode += dec.codeGeneration();
-        return "push 0\n" + declCode + exp.codeGeneration() + "halt\n" + FOOLlib.getCode();
+        return "push 0\n" + 
+                "/*ClassCode:*/\n" +
+                classCode + "\n" +
+                "/*DeclCode:*/\n" +
+                declCode + "\n" +
+                "/*ExpCod(ProgLetIn):*/\n" +
+                exp.codeGeneration() + 
+                "halt\n" + 
+                FOOLlib.getCode();
     }
 
 }

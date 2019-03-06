@@ -1,6 +1,9 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import lib.FOOLlib;
 
@@ -39,8 +42,9 @@ public class ClassNode implements Node, DecNode {
             methlstr += mdec.toPrint(indent + "  ");
         }
         return indent + "Class:" + id
-            + (" extends:" + superId + "\n" + (superEntry != null ? superEntry.getType().toPrint(indent + "  ext:") :  "\n"))
+            + (superEntry != null ? (" extends:" + superId + "\n" + superEntry.getType().toPrint(indent + "  ext:")) :  "\n")
             //+ symType.toPrint(indent + "  ")
+            
             + fieldlstr
             + methlstr;
     }
@@ -78,8 +82,39 @@ public class ClassNode implements Node, DecNode {
 
     @Override
     public String codeGeneration() {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<String> dispatchTable = new ArrayList<>();
+        if (superEntry != null) {
+            dispatchTable.addAll(FOOLlib.getDispatchTables().get(-superEntry.getOffset() - 2));
+        }
+        FOOLlib.getDispatchTables().add(dispatchTable);
+//        ArrayList<Node> sortedMethods = new ArrayList<>(methods);
+//        Collections.sort(sortedMethods, new Comparator<Node>() {
+//           public int compare(Node n1, Node n2) {
+//               Integer oN1 = ((MethodNode)n1).getOffset();
+//               Integer oN2 = ((MethodNode)n2).getOffset();
+//               return oN1.compareTo(oN2);
+//           }
+//        });
+        for (Node m : methods) {
+            m.codeGeneration();
+            int offset = ((MethodNode)m).getOffset();
+            String label = ((MethodNode)m).getLabel();
+            dispatchTable.add(offset, label);
+        }
+        //DispatchTable Create ok
+        String incrementHP = "push 1\n" + "lhp\n" + "add\n" + "shp\n";
+        String memLabelInHP = "";
+        for (String l : dispatchTable) {
+            memLabelInHP += "push " +  l + "\n" 
+                    + "lhp\n"
+                    + "sw\n"
+                    + incrementHP;
+        }
+        //System.out.println("memLabel\n" + memLabelInHP);
+        return  "\n/*ClassNode: " + id + "*/\n" +
+                "lhp\n" +
+                memLabelInHP
+                ;
     }
 
     @Override

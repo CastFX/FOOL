@@ -74,7 +74,9 @@ public class FunNode implements Node, DecNode {
         for (Node par : parlist)
             popParl += "pop\n";
         String funl = FOOLlib.freshFunLabel();
-        FOOLlib.putCode(funl + ":\n" + "cfp\n" + // setta $fp a $sp
+        FOOLlib.putCode("/*FunNode: " + id + "*/\n" +
+                funl + ":\n" + 
+                "cfp\n" + // setta $fp a $sp
                 "lra\n" + // inserisce return address
                 declCode + // inresisce dichiarazioni locali
                 exp.codeGeneration() + "srv\n" + // pop del return value

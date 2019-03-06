@@ -2,16 +2,22 @@ package lib;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 import ast.*;
 
 public class FOOLlib {
 
     private static HashMap<String, String> superType = new HashMap<>();
-    
+    private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();         
     private static int labCount = 0;
     private static int funLabCount = 0;
     private static String funCode = "";
+    public static final int MEMSIZE = 100;
+    
+    public static ArrayList<ArrayList<String>> getDispatchTables() {
+        return dispatchTables;
+    }
     
     public static HashMap<String, String> getSuperTypeMap() {
         return superType;
@@ -79,8 +85,7 @@ public class FOOLlib {
     }
 
     public static void putCode(String c) {
-        funCode += "\n" + c; // aggiunge una linea vuota di separazione prima di
-                             // funzione
+        funCode += "\n" + c; // aggiunge una linea vuota di separazione prima di funzione
     }
 
     public static String getCode() {

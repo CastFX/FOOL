@@ -53,27 +53,30 @@ public class NewNode implements Node {
     //TODO
     public String codeGeneration() {
         String parCode = "";
-        for (int i = parlist.size() - 1; i >= 0; i--)
+        String parHPCode = "";
+        String incrementHP = "push 1\n" + "lhp\n" + "add\n" + "shp\n";
+        for (int i = 0; i < parlist.size(); i++) {
             parCode += parlist.get(i).codeGeneration();
-        String getAR = "";
-        for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
-            getAR += "lw\n";
-        return "lfp\n" + // Contro Link
-                parCode + // allocazione valori parametri
-                "lfp\n" + getAR + // risalgo la catena statica per ottenere
-                                  // l'indirizzo dell'AR
-                                  // in cui � dichiarata la funzione (Access
-                                  // Link)
-        "push " + entry.getOffset() + "\n" + "lfp\n" + getAR + // risalgo la
-                                                               // catena statica
-                                                               // per ottenere
-                                                               // l'indirizzo
-                                                               // dell'AR
-                                                               // in cui �
-                                                               // dichiarata la
-                                                               // funzione
-                                                               // (Access Link)
-        "add\n" + "lw\n" + // carica sullo stack l'indirizzo della funzione
-                "js\n"; // effettua il salto
+            parHPCode += "lhp\n" + "sw\n" + incrementHP;
+        }
+        //System.out.println("new Node parlist: " + parlist);
+//        System.out.println("new Node code: \n" + parCode +
+//                parHPCode +
+//                "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n" +
+//                "lw\n" +
+//                "lhp\n" + 
+//                "sw\n" + 
+//                "lhp\n" +
+//                "lw\n" +
+//                incrementHP);
+        return parCode +
+                parHPCode +
+                "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n" +
+                "lw\n" +
+                "lhp\n" + 
+                "sw\n" +
+                "lhp\n" +
+                //"lw\n" +
+                incrementHP;
     }
 }

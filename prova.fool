@@ -1,20 +1,339 @@
 let
-  class A (f:int, b:bool) {
-    fun first:int() f;
-    fun second:bool() b; 
+  class B (f:int, b:bool) {
+    fun test:bool() true; 
+    fun test2:int() 1;
   }
+  class C (f:int, d:int) {
+  	fun notTest:bool() false;
+  }
+  
+  class D() {
+  	fun x:bool(t1:int, t2:int) t1 == t2;
+  	fun y:bool(t1:int, t2:int) t1 + 1 == t2;
+  	fun z:int(t1:int) t1;
+  }
+  
+  var var1:D = new D();
+  var var2:C = new C(9,10);
+  
+  fun funTest:bool(testD:D) testD.x(1,1);
+in  
+	print(funTest(var1));
+	
+/* ------------------------ Serbatoio esempi ----------------------
+
+let
+  class List (f:int, r:List) {
+    fun first:int() f;
+    fun rest:List() r; 
+  }
+  
+  fun printList:List (l:List) 
+    let  
+      fun makeList:List (l:List, i:int) new List (i,l);
+      fun printL:List (l:List)    
+        if (l == null) then {null}
+                       else {makeList(printL(l.rest()),print(l.first()))};
+    in  printL(l);                 
+  
+  fun append:List (l1:List, l2:List)
+      if (l1 == null)
+        then {l2}
+        else {new List(l1.first(), append(l1.rest(),l2))} ;  
+    
+  fun filter:List (l:List,check:(int)->bool) 
+      if (l == null) 
+        then {null}
+        else {if (check(l.first()))
+              then {new List(l.first(),filter(l.rest(),check))}
+              else {filter(l.rest(),check)}};
+       
+  fun quicksort:List (l:List, rel:(int,int)->bool)    
+      let
+        var pivot:int = if (l==null) then {0} else {l.first()}; 
+        fun prec:bool (x:int) rel(x,pivot);
+        fun succ:bool (x:int) rel(pivot,x);
+      in        
+         if (l == null) 
+           then {null}
+           else {append( quicksort(filter(l,prec),rel),
+                         new List(pivot, quicksort(filter(l,succ),rel)) )};
+           
+  fun increasing:List(l:List) 
+    let fun inc:bool (x:int,y:int) not(y<=x);
+    in quicksort(l,inc);
+  
+  fun decreasing:List(l:List) 
+    let fun dec:bool (x:int,y:int) not(x<=y);
+    in quicksort(l,dec);   
+  var l:List = new List (3, 
+                    new List(4,
+                        new List(6,
+                            new List (1, 
+                                new List(2,
+                                    new List(5,null))))));
+  
+in printList(decreasing(l));
+
+let
+	fun f:int(x:int) x-1;
+	fun stop:bool(x:int, m:(int)->int)
+		if(m(x) == 0)
+			then {true}
+			else {stop(x-1,m)};
+in
+	stop(5,f);
+
+--------------------------------
+let
+	fun f:int() 0;
+	
+	fun stop:bool(m:()->int)
+		if(m() == 0)
+			then {true}
+			else {stop(m)};
+in
+	stop(f);
+
+
+----------------------
+let
+	fun f:int(x:int)
+		if(x==0) then {0}
+		else { f(x-1); }
+
+in
+	f(2);
+----------------------------------------------
+let
+  class List (f:int, r:List) {
+    fun first:int() f;
+    fun rest:List() r; 
+  }
+  
+  fun printList:List (l:List) 
+    let  
+      fun makeList:List (l:List, i:int) new List (i,l);
+      fun printL:List (l:List)    
+        if (l == null) then {null}
+                       else {makeList(printL(l.rest()),print(l.first()))};
+    in  printL(l);                 
+  
+  fun append:List (l1:List, l2:List)
+      if (l1 == null)
+        then {l2}
+        else {new List(l1.first(), append(l1.rest(),l2))} ;  
+    
+  fun filter:List (l:List,check:(int)->bool) 
+      if (l == null) 
+        then {null}
+        else {if (check(l.first()))
+              then {new List(l.first(),filter(l.rest(),check))}
+              else {filter(l.rest(),check)}};
+       
+  fun quicksort:List (l:List, rel:(int,int)->bool)    
+      let
+        var pivot:int = if (l==null) then {0} else {l.first()}; 
+        fun prec:bool (x:int) rel(x,pivot);
+        fun succ:bool (x:int) rel(pivot,x);
+      in        
+         if (l == null) 
+           then {null}
+           else {append( quicksort(filter(l,prec),rel),
+                         new List(pivot, quicksort(filter(l,succ),rel)) )};
+           
+  fun increasing:List(l:List) 
+    let fun inc:bool (x:int,y:int) not(y<=x);
+    in quicksort(l,inc);
+  
+  fun decreasing:List(l:List) 
+    let fun dec:bool (x:int,y:int) not(x<=y);
+    in quicksort(l,dec);   
+  var l:List = new List (3, 
+                    new List(4,
+                        new List(6,
+                            new List (1, 
+                                new List(2,
+                                    new List(5,null))))));
+  
+in printList(decreasing(l));
+
+--------------------------------
+
+ let
+  
+  class A (x:int, y:int) {
+	fun getX:int() x;
+  	fun getY:int() y;
+  }
+
+  fun f:int(x:A, rel:(A)->bool) 
+  	if(rel(x))
+  	 then {x.getX()}
+	 else {x.getY()};
+
+  fun r:bool(x:A)
+  	if(x.getX() == x.getY())
+  	 then {true}
+  	 else {false};
+
+  fun make:A(a:A)
+  	if(a == null)
+  	 then {new A(1,1)}	
+	 else {a};
+	 
+var x:A = null;
+
+in
+	print(f(make(x),r));
+	
+-----------------------------
+let
+
+  class Account (money:int) {
+    fun getMon:int () money;
+  }
+  
+  class TradingAcc extends Account (invested:int) {
+    fun getInv:int () invested;
+  }
+  
+  class BankLoan (loan: Account) {
+    fun getLoan:Account () loan;
+    fun openLoan:Account (m:TradingAcc) if ((m.getMon()+m.getInv())>=30000) 
+      then {new Account(loan.getMon())} 
+      else {null};
+  } 
+  
+  class MyBankLoan extends BankLoan (loan: TradingAcc) {
+    fun openLoan:TradingAcc (l:Account) if (l.getMon()>=20000) 
+      then {new TradingAcc(loan.getMon(),loan.getInv())} 
+      else {null};
+  } 
+    
+  var bl:BankLoan = new MyBankLoan(new TradingAcc(50000,40000));
+  var myTradingAcc:TradingAcc = new TradingAcc(20000,5000);
+  var myLoan:Account = bl.openLoan(myTradingAcc);
+      
+in print(if (myLoan==null) then {0} else {myLoan.getMon()}); 
+
+-------------------------
+
+let 
+  var x:int = 3;
+  var y:int = 0;
+  
+  fun a:int ()
+  	let
+  		var z:int = x;
+  		fun b:int (x:int) x+1;
+  	in
+  		x+b(1);
+ 
+  
+  fun g:int (f1:()->int, f2:(int,int)->int, x:int, y:int)
+  	if f2(f1(),x+y) >= 10
+      then { true }
+      else { false };
+      
+  fun l:int (x:int, y:int) x+y;
+  
+in
+	print(g(a,l,x,y));
+
+------------------
+let
+
+ class Printable(v:int){
+ 	fun value:int() v;
+ }
+
+  class Printer () {
+    fun printValue:int(p:Printable) p.value();
+  }
+ 
+
+  
+  class Integer extends Printable(){
+  
+  }
+  
+  var x:Integer = new Integer(10);  
+  var p:Printer = new Printer();
+in print(p.printValue(x));
+
+------
+
+let 
+  var x:int = 3;
+  var y:int = 0;
+  
+  fun a:int ()
+  	let
+  		var z:int = x;
+  		fun b:int (x:int) x+1;
+  	in
+  		x+b(1);
+ 
+  
+  fun g:int (f1:()->int, f2:(int,int)->int, x:int, y:int)
+  	if f2(f1(),x+y) >= 10
+      then { true }
+      else { false };
+      
+  fun l:int (x:int, y:int) x+y;
+  
+in
+	print(g(a,l,x,y));
+-------------------
+let 
+  var x:int = 1;
+  var b:bool = true;
+in
+  print (if (b) then { x+1 } else { x+2 });
+---------------
+let 
+  fun f:int (i:int, j:int) i+j;
+in
+  print (f(3,5));
+----------------
+let
+  var y:int = 5+2;
+  fun f:bool (n:int, m:int)
+    let 
+      var x:int = m;
+  in x==y;   
+in  
+  print ( 
+    if f(y,8) 
+      then { false }
+      else { 10 }
+  ); 
+  
+  bool function(int x, int y){
+  	return x==y;
+  }
+  
+  
+  
+  
+*/
+
+
+let
   class B (f:int, b:bool) {
     fun first:int() f;
+    fun second:int() first()+1;
     fun second:bool() b; 
   }
   
-  class C extends A (c:int){
-	fun C:int() 8;
+  class C extends B (c:int){
+	fun C:int(x:int) 8;
 	fun D:bool() true;
   }
   
   var s:C = new C(1,true,1);
-  var t:A = new C(2,false,2);
+  var t:B = new C(2,false,2);
   
   var y:int = 5+2;
   fun f:bool (n:int, m:int)
@@ -23,7 +342,8 @@ let
   in x==y;   
 in  
   print ( 
-    if f(s.first(),y) 
+    if f(s.first(),09
       then { s.second()	 }
-      else { s.C() }
+      else { s.C(9) }
   ); 
+  */

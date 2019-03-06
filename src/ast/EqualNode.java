@@ -29,8 +29,12 @@ public class EqualNode implements Node {
     public String codeGeneration() {
         String l1 = FOOLlib.freshLabel();
         String l2 = FOOLlib.freshLabel();
-        return left.codeGeneration() + right.codeGeneration() + "beq " + l1 + "\n" + "push 0\n" + "b " + l2 + "\n" + l1
-                + ": \n" + "push 1\n" + l2 + ": \n";
+        return left.codeGeneration() + right.codeGeneration() 
+            + "beq " + l1 + "\n" 
+            + "push 0\n" 
+            + "b " + l2 + "\n" + l1 + ": \n" 
+            + "push 1\n" 
+            + l2 + ": \n";
     }
 
 }
