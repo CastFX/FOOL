@@ -1,10 +1,10 @@
 let
   class B (f:int, b:bool) {
     fun test:bool() true; 
-    fun test2:int() 1;
+    fun test2:int() 4;
   }
   class C (f:int, d:int) {
-  	fun notTest:bool() false;
+  	fun notTest:bool() f == d;
   }
   
   class D() {
@@ -14,11 +14,12 @@ let
   }
   
   var var1:D = new D();
-  var var2:C = new C(9,10);
+  var var2:C = new C(9,9);
+  var var3:B = new B(3,true);
   
-  fun funTest:bool(testD:D) testD.x(1,1);
+  fun funTest:int(testB:B) testB.test2();
 in  
-	print(funTest(var1));
+	print(funTest(var3));
 	
 /* ------------------------ Serbatoio esempi ----------------------
 

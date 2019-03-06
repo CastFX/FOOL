@@ -74,10 +74,9 @@ public class ClassCallNode implements Node {
                 getObjectPointer +
                 getObjectPointer + 
                 "lw\n" + //gets DispatchPointer Address
-                "lw\n" + //gets Dispatch Pointer = Address of First Method
                 "push " + (methodEntry.getOffset()) + "\n" + //Address of the called Method
                 "add\n" +
-                //"lw\n" +
+                "lw\n" +
                 "js\n"
                 ;
 //        return "lfp\n" + getAR +        // risalgo la catena statica per ottenere l'indirizzo dell'AR 

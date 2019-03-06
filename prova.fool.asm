@@ -63,7 +63,7 @@ lhp
 add
 shp
 push 9
-push 10
+push 9
 lhp
 sw
 push 1
@@ -85,18 +85,41 @@ push 1
 lhp
 add
 shp
+push 3
+push 1
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 98
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
 push function6
 
 /*ExpCod(ProgLetIn):*/
 /*CallNode: funTest()*/
 lfp
-/*IdNode: var1*/
-push -5
+/*IdNode: var3*/
+push -7
 lfp
 add
 lw
 lfp
-push -7
+push -8
 lfp
 add
 lw
@@ -121,7 +144,7 @@ js
 function1:
 cfp
 lra
-push 1
+push 4
 srv
 sra
 pop
@@ -134,7 +157,24 @@ js
 function2:
 cfp
 lra
+/*IdNode: f*/
+push -1
+lfp
+lw
+add
+lw
+/*IdNode: d*/
+push -2
+lfp
+lw
+add
+lw
+beq label0
 push 0
+b label1
+label0: 
+push 1
+label1: 
 srv
 sra
 pop
@@ -157,12 +197,12 @@ push 2
 lfp
 add
 lw
-beq label0
+beq label2
 push 0
-b label1
-label0: 
+b label3
+label2: 
 push 1
-label1: 
+label3: 
 srv
 sra
 pop
@@ -188,12 +228,12 @@ push 2
 lfp
 add
 lw
-beq label2
+beq label4
 push 0
-b label3
-label2: 
+b label5
+label4: 
 push 1
-label3: 
+label5: 
 add
 srv
 sra
@@ -228,10 +268,8 @@ function6:
 cfp
 lra
 
-ClassCallNode: x:
+ClassCallNode: test2:
 lfp
-push 1
-push 1
 /*Risalita AR*/
 lfp
 push 1
@@ -243,9 +281,9 @@ push 1
 add
 lw
 lw
-lw
-push 0
+push 1
 add
+lw
 js
 srv
 sra
