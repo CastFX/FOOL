@@ -95,12 +95,20 @@ public class ClassNode implements Node, DecNode {
 //               return oN1.compareTo(oN2);
 //           }
 //        });
+        
         for (Node m : methods) {
             m.codeGeneration();
             int offset = ((MethodNode)m).getOffset();
             String label = ((MethodNode)m).getLabel();
-            dispatchTable.add(offset, label);
+            System.out.println("adding method: " + label + ",at offset:" +offset +" for class " + id + ", dispatchTable.Size(): " + dispatchTable.size());
+            if (offset >= dispatchTable.size()) {
+                dispatchTable.add(offset, label);
+            } else {
+                dispatchTable.set(offset, label);
+            }
         }
+        System.out.println("class: " + id + ", dispatchTable: " + dispatchTable);
+        
         //DispatchTable Create ok
         String incrementHP = "push 1\n" + "lhp\n" + "add\n" + "shp\n";
         String memLabelInHP = "";

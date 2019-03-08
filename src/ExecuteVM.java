@@ -134,7 +134,7 @@ public class ExecuteVM {
                 // System.out.println("js: address=" + address + "memory address
                 // -1:" + memory[sp-1] + ", -2:" + memory[sp-2]);
                 ip = address;
-                istrList.add("JS. ADDR= " + memory[sp-1] + ",RA: " + ip + getHeapAndStack());
+                istrList.add("JS. ADDR= " + memory[sp-1] + ",RA: " + ra + getHeapAndStack());
                 break;
             case SVMParser.STORERA: //
                 ra = pop();
@@ -184,8 +184,10 @@ public class ExecuteVM {
         }
     }
     private String getHeapPlusAndStack(int plusHeap) {
+        //System.out.println("sp: " + sp);
         return "\nHeap: " + Arrays.toString(Arrays.copyOfRange(memory, 0, hp + plusHeap)) + "  Stack: " 
-                + Arrays.toString(Arrays.copyOfRange(memory, sp, MEMSIZE)) + "\n\n";
+                + (sp >= 0 ? Arrays.toString(Arrays.copyOfRange(memory, sp, MEMSIZE)) : "")
+                + "\n\n";
     }
     
     private String getHeapAndStack() {

@@ -13,7 +13,7 @@ public class FOOLlib {
     private static int labCount = 0;
     private static int funLabCount = 0;
     private static String funCode = "";
-    public static final int MEMSIZE = 100;
+    public static final int MEMSIZE = 10000;
     
     public static ArrayList<ArrayList<String>> getDispatchTables() {
         return dispatchTables;

@@ -1,7 +1,17 @@
 push 0
 /*ClassCode:*/
 
-/*ClassNode: B*/
+/*ClassNode: Account*/
+lhp
+push function0
+lhp
+sw
+push 1
+lhp
+add
+shp
+
+/*ClassNode: TradingAcc*/
 lhp
 push function0
 lhp
@@ -18,7 +28,7 @@ lhp
 add
 shp
 
-/*ClassNode: C*/
+/*ClassNode: BankLoan*/
 lhp
 push function2
 lhp
@@ -27,10 +37,17 @@ push 1
 lhp
 add
 shp
-
-/*ClassNode: D*/
-lhp
 push function3
+lhp
+sw
+push 1
+lhp
+add
+shp
+
+/*ClassNode: MyBankLoan*/
+lhp
+push function2
 lhp
 sw
 push 1
@@ -44,16 +61,23 @@ push 1
 lhp
 add
 shp
-push function5
-lhp
-sw
-push 1
-lhp
-add
-shp
 
 /*DeclCode:*/
-push 96
+push 50000
+push 40000
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9997
 lw
 lhp
 sw
@@ -62,21 +86,13 @@ push 1
 lhp
 add
 shp
-push 9
-push 9
 lhp
 sw
 push 1
 lhp
 add
 shp
-lhp
-sw
-push 1
-lhp
-add
-shp
-push 97
+push 9995
 lw
 lhp
 sw
@@ -85,8 +101,8 @@ push 1
 lhp
 add
 shp
-push 3
-push 1
+push 20000
+push 5000
 lhp
 sw
 push 1
@@ -99,7 +115,7 @@ push 1
 lhp
 add
 shp
-push 98
+push 9997
 lw
 lhp
 sw
@@ -108,73 +124,100 @@ push 1
 lhp
 add
 shp
-push function6
 
-/*ExpCod(ProgLetIn):*/
-/*CallNode: funTest()*/
+ClassCallNode: openLoan:
 lfp
-/*IdNode: var3*/
+/*IdNode: myTradingAcc*/
 push -7
 lfp
 add
 lw
+/*Risalita AR*/
 lfp
+push -6
+add
+lw
+/*Risalita AR*/
+lfp
+push -6
+add
+lw
+lw
+push 1
+add
+lw
+js
+
+/*ExpCod(ProgLetIn):*/
+/*IdNode: myLoan*/
 push -8
 lfp
 add
 lw
+push -1
+/*EqualsNode*/
+beq label10
+push 0
+b label11
+label10: 
+push 1
+label11: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label8
+
+ClassCallNode: getMon:
+lfp
+/*Risalita AR*/
+lfp
+push -8
+add
+lw
+/*Risalita AR*/
+lfp
+push -8
+add
+lw
+lw
+push 0
+add
+lw
 js
+b label9
+label8: 
+push 0
+label9: 
 print
 halt
 
-/*MethodNode: test*/
+/*MethodNode: getMon*/
 function0:
 cfp
 lra
-push 1
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: test2*/
-function1:
-cfp
-lra
-push 4
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: notTest*/
-function2:
-cfp
-lra
-/*IdNode: f*/
+/*IdNode: money*/
 push -1
 lfp
 lw
 add
 lw
-/*IdNode: d*/
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+/*MethodNode: getInv*/
+function1:
+cfp
+lra
+/*IdNode: invested*/
 push -2
 lfp
 lw
 add
 lw
-beq label0
-push 0
-b label1
-label0: 
-push 1
-label1: 
 srv
 sra
 pop
@@ -183,29 +226,116 @@ lrv
 lra
 js
 
-/*MethodNode: x*/
+/*MethodNode: getLoan*/
+function2:
+cfp
+lra
+/*IdNode: loan*/
+push -1
+lfp
+lw
+add
+lw
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+/*MethodNode: openLoan*/
 function3:
 cfp
 lra
-/*IdNode: t1*/
+push 30000
+
+ClassCallNode: getMon:
+lfp
+/*Risalita AR*/
+lfp
 push 1
-lfp
 add
 lw
-/*IdNode: t2*/
-push 2
+/*Risalita AR*/
 lfp
+push 1
 add
 lw
-beq label2
+lw
+push 0
+add
+lw
+js
+
+ClassCallNode: getInv:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+add
+bleq label2
 push 0
 b label3
 label2: 
 push 1
 label3: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label0
+push -1
+b label1
+label0: 
+
+ClassCallNode: getMon:
+lfp
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+lw
+push 0
+add
+lw
+js
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+label1: 
 srv
 sra
-pop
 pop
 pop
 sfp
@@ -213,78 +343,103 @@ lrv
 lra
 js
 
-/*MethodNode: y*/
+/*MethodNode: openLoan*/
 function4:
 cfp
 lra
-/*IdNode: t1*/
-push 1
+push 20000
+
+ClassCallNode: getMon:
 lfp
+/*Risalita AR*/
+lfp
+push 1
 add
 lw
-push 1
-/*IdNode: t2*/
-push 2
+/*Risalita AR*/
 lfp
+push 1
 add
 lw
-beq label4
+lw
 push 0
+add
+lw
+js
+bleq label6
+push 0
+b label7
+label6: 
+push 1
+label7: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label4
+push -1
 b label5
 label4: 
+
+ClassCallNode: getMon:
+lfp
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+lw
+push 0
+add
+lw
+js
+
+ClassCallNode: getInv:
+lfp
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+/*Risalita AR*/
+lfp
+lw
+push -1
+add
+lw
+lw
 push 1
+add
+lw
+js
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9997
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
 label5: 
-add
-srv
-sra
-pop
-pop
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: z*/
-function5:
-cfp
-lra
-/*IdNode: t1*/
-push 1
-lfp
-add
-lw
-srv
-sra
-pop
-pop
-sfp
-lrv
-lra
-js
-
-/*FunNode: funTest*/
-function6:
-cfp
-lra
-
-ClassCallNode: test2:
-lfp
-/*Risalita AR*/
-lfp
-push 1
-add
-lw
-/*Risalita AR*/
-lfp
-push 1
-add
-lw
-lw
-push 1
-add
-lw
-js
 srv
 sra
 pop

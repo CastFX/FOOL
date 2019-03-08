@@ -2,8 +2,10 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import ast.*;
 import lib.FOOLlib;
+import lib.FOOLParsingLib;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

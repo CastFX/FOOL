@@ -1,6 +1,7 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class ClassTypeNode implements Node {
 
@@ -13,11 +14,20 @@ public class ClassTypeNode implements Node {
     }
 
     public void insertFieldType(Node type, int position) {
-        allFields.add(position, type);
+        if (position == allFields.size()) {
+            allFields.add(type);
+        } else {
+            allFields.set(position, type);
+        }
     }
     
     public void insertMethodType(Node type, int position) {
-        allMethods.add(position, type);
+        if (position == allMethods.size()) {
+            allMethods.add(type);
+        } else {
+            System.out.println("insertMethodType type: " + type.toPrint("") + " at index: " +position);
+            allMethods.set(position, type);
+        }
     }
     
     public ArrayList<Node> getAllFields() {

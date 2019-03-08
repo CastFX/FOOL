@@ -4,3 +4,9 @@
 /SVMLexer.java
 /SVMLexer.tokens
 /SVMParser.java
+/FOOL.interp
+/FOOL.tokens
+/FOOLLexer.interp
+/FOOLLexer.java
+/FOOLLexer.tokens
+/FOOLParser.java

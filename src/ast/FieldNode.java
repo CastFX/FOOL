@@ -4,10 +4,12 @@ public class FieldNode implements Node, DecNode {
 
     private String id;
     private Node type;
+    private int offset;
 
-    public FieldNode(String i, Node t) {
+    public FieldNode(String i, Node t, int o) {
         id = i;
         type = t;
+        offset = o;
     }
 
     public String toPrint(String s) {
@@ -27,6 +29,10 @@ public class FieldNode implements Node, DecNode {
     public Node getSymType() {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    public int getOffset() {
+        return offset;
     }
 
 }
