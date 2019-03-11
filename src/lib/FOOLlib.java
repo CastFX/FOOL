@@ -8,7 +8,7 @@ import ast.*;
 
 public class FOOLlib {
 
-    private static HashMap<String, String> superType = new HashMap<>();
+    private static HashMap<String, String> superTypeMap = new HashMap<>();
     private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();         
     private static int labCount = 0;
     private static int funLabCount = 0;
@@ -20,7 +20,7 @@ public class FOOLlib {
     }
     
     public static HashMap<String, String> getSuperTypeMap() {
-        return superType;
+        return superTypeMap;
     }
 
     // valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base:
@@ -33,27 +33,63 @@ public class FOOLlib {
                 || (((a instanceof RefTypeNode) && (b instanceof RefTypeNode))
                         && isRefSubtype(((RefTypeNode) a).getId(), ((RefTypeNode) b).getId()))
                 || ((a instanceof EmptyTypeNode) && (b instanceof RefTypeNode))
+                || ((a instanceof EmptyTypeNode) && (b instanceof EmptyTypeNode))
                 || (((a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode))
                        && isArrowSubtype((ArrowTypeNode) a,(ArrowTypeNode) b))
                 ;
     }
 
     private static boolean isRefSubtype(String subID, String superID) {
+        if (subID == null || superID == null) {
+            return false;
+        }
         if (subID.equals(superID)) {
             return true;
         }
-        if (!existsClass(subID) || !existsClass(superID) || superType.get(subID) == null) {
+        if (!existsClass(subID) || !existsClass(superID) || superTypeMap.get(subID) == null) {
             return false;
         }
-        if (superType.get(subID).equals(superID)) {
+        if (superTypeMap.get(subID).equals(superID)) {
             return true;
         } else {
-            return isRefSubtype(superType.get(subID), superID);
+            return isRefSubtype(superTypeMap.get(subID), superID);
         }
     }
     
     public static boolean existsClass(String id) {
-        return superType.containsKey(id);
+        return superTypeMap.containsKey(id);
+    }
+    
+    public static Node lowestCommonAncestor(Node thenExp, Node elseExp) {
+        //Lo dovrebbe già fare la isSubtype();
+        if (!(thenExp instanceof EmptyTypeNode) && elseExp instanceof EmptyTypeNode) {
+            return thenExp;
+        }
+        if (thenExp instanceof EmptyTypeNode && !(elseExp instanceof EmptyTypeNode)) {
+            return elseExp;
+        }
+        
+        if ((thenExp instanceof BoolTypeNode || thenExp instanceof IntTypeNode) &&
+                elseExp instanceof BoolTypeNode || elseExp instanceof IntTypeNode) {
+            if (thenExp instanceof IntTypeNode || elseExp instanceof IntTypeNode) {
+                return new IntTypeNode();
+            } else {
+                return new BoolTypeNode();
+            }
+        }
+        
+        if (thenExp instanceof RefTypeNode && elseExp instanceof RefTypeNode) {
+            RefTypeNode thenRefNode = (RefTypeNode) thenExp;
+            String elseStringClass = ((RefTypeNode) elseExp).getId();
+            for (String superClass = superTypeMap.get(thenRefNode.getId()); 
+                    superClass != null; 
+                    superClass = superTypeMap.get(superClass)) {
+                if (isRefSubtype(elseStringClass, superClass)) {
+                    return new RefTypeNode(superClass);
+                }
+            }
+        }
+        return null;
     }
 
     private static boolean isArrowSubtype(ArrowTypeNode a, ArrowTypeNode b) {

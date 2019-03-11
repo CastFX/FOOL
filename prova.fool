@@ -1,28 +1,41 @@
 let
+  class A () {
+    fun getFucked:int() 1;
+  }
+  
+  class B extends A() {
+    fun getFucked:int() 2;
+  }
+  
+  class C extends A() {
+    fun getFucked:int() 3;
+  }
+	
+  class D extends B() {
+    fun getFucked:int() 4;
+  }
+  
+  class E extends D() {
+    fun getFucked:int() 5;
+  }
+  
+  class F extends C() {
+    fun getFucked:int() 6;
+  }
+  
+  class G extends D() {
+    fun getFucked:int() 7;
+  }
+  
+  class Z() {
+    fun getFucked:int() 8;
+  }
 
-  class Account (money:int) {
-    fun getMon:int () money;
-  }
+  var a7:A = new A();
+  var a8:A = new A();
+  var f9:F = new F();
+  var e10:E = new E();
+  var g11:G = new G();
   
-  class TradingAcc extends Account (invested:int) {
-    fun getInv:int () invested;
-  }
-  
-  class BankLoan (loan: Account) {
-    fun getLoan:Account () loan;
-    fun openLoan:Account (m:TradingAcc) if ((m.getMon()+m.getInv())>=30000) 
-      then {new Account(loan.getMon())} 
-      else {null};
-  } 
-  
-  class MyBankLoan extends BankLoan (loan: TradingAcc) {
-    fun openLoan:TradingAcc (l:Account) if (l.getMon()>=20000) 
-      then {new TradingAcc(loan.getMon(),loan.getInv())} 
-      else {null};
-  } 
-    
-  var bl:BankLoan = new MyBankLoan(new TradingAcc(50000,40000));
-  var myTradingAcc:TradingAcc = new TradingAcc(20000,5000);
-  var myLoan:Account = bl.openLoan(myTradingAcc);
-      
-in print(if (myLoan==null) then {0} else {myLoan.getMon()});  
+  var d12:G = if (true) then {null} else {null};
+in print (d12.getFucked());

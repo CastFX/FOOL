@@ -25,7 +25,6 @@ public class ClassTypeNode implements Node {
         if (position == allMethods.size()) {
             allMethods.add(type);
         } else {
-            System.out.println("insertMethodType type: " + type.toPrint("") + " at index: " +position);
             allMethods.set(position, type);
         }
     }

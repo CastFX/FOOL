@@ -51,7 +51,7 @@ cllist returns [ArrayList<Node> astlist]
         HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
 		HashSet<String> names = new HashSet<String>();
 		STentry superEntry = null;
-		String superId = "";
+		String superId = null;
         STentry entry = new STentry(0, ctn, offset_0--);
 		FOOLParsingLib.addClassToSymTable(symTable.get(0), $i.text, entry, $i.line);
         //NestingLevel = 1 Dentro la classe
@@ -77,8 +77,8 @@ cllist returns [ArrayList<Node> astlist]
 			ctn.insertMethodType(methodTypes.get(i),i);	
 		}}
 	)? {
+		FOOLlib.getSuperTypeMap().put($i.text, superId);
 		ClassNode c = new ClassNode($i.text, ctn, superId, superEntry);
-		FOOLlib.getSuperTypeMap().put($i.text, $i2.text);
 		$astlist.add(c);}
 	LPAR {
     	int fieldOffset = -ctn.getAllFields().size() - 1; } 

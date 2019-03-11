@@ -27,8 +27,7 @@ public class FieldNode implements Node, DecNode {
 
     @Override
     public Node getSymType() {
-        // TODO Auto-generated method stub
-        return null;
+        return type;
     }
     
     public int getOffset() {

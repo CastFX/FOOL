@@ -23,14 +23,33 @@ public class IfNode implements Node {
             System.out.println("non boolean condition in if");
             System.exit(0);
         }
+
         Node t = th.typeCheck();
         Node e = el.typeCheck();
-        if (FOOLlib.isSubtype(t, e))
+        System.out.println("IfnodeTypecheck " + t.toPrint("") + e.toPrint(""));
+        if (FOOLlib.isSubtype(t, e)) {
             return e;
-        if (FOOLlib.isSubtype(e, t))
+        }
+        if (FOOLlib.isSubtype(e, t)) {
             return t;
-        System.out.println("Incompatible types in then-else branches");
-        System.exit(0);
+        }
+        
+        
+        //class A
+        //class B extends A
+        //class C extends A
+        //class D extends B
+        //class E extends C
+        //A x = if (cond) then (D) else (E)
+        //int i = if (bool) then (bool) else (int)
+        //
+        Node lca = FOOLlib.lowestCommonAncestor(t, e);
+        if (lca == null) {
+            System.out.println("Incompatible types in then-else branches");
+            System.exit(0);
+        } else {
+            return lca;
+        }
         return null;
     }
 

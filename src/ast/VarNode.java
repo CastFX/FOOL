@@ -32,8 +32,7 @@ public class VarNode implements Node, DecNode {
 
     @Override
     public Node getSymType() {
-        // TODO Auto-generated method stub
-        return null;
+        return type;
     }
 
 }

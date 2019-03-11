@@ -1,5 +1,6 @@
 package ast;
 
+import java.lang.invoke.MethodHandleProxies;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,28 +56,53 @@ public class ClassNode implements Node, DecNode {
             m.typeCheck();
         }
         if (!(symType instanceof ClassTypeNode) ||
-            !(superEntry.getType() instanceof ClassTypeNode)) {
+            superEntry != null && !(superEntry.getType() instanceof ClassTypeNode)) {
             System.out.println("either symType or superEntry of ClassNode not of ClassTypeNode");
             System.exit(0);
-        } else {
-            ClassTypeNode ctnSuper = (ClassTypeNode) superEntry.getType();
-            ClassTypeNode ctnSub = (ClassTypeNode) symType;
-            for (int i = 0; i < ctnSuper.getAllFields().size(); i++) {
-                if (!FOOLlib.isSubtype(ctnSuper.getAllFields().get(i).typeCheck()
-                        , ctnSub.getAllFields().get(i).typeCheck())) {
-                    System.out.println("field type" + i + " of superclass not subtype of current");
-                    System.exit(0);
-                }
-            }
-            
-            for (int i = 0; i < ctnSuper.getAllMethods().size(); i++) {
-                if (!FOOLlib.isSubtype(ctnSuper.getAllMethods().get(i).typeCheck()
-                        , ctnSub.getAllMethods().get(i).typeCheck())) {
-                    System.out.println("method type" + i + " of superclass not subtype of current");
-                    System.exit(0);
-                }
-            }
         }
+        if (superEntry != null) {
+            final ClassTypeNode ctnSuper =  (ClassTypeNode) superEntry.getType();
+            final ClassTypeNode ctnSub = (ClassTypeNode) symType;
+
+            fields.stream()
+            .map(n -> (FieldNode) n)
+            .forEach(f -> {
+                int fieldPosition = -f.getOffset() - 1;
+                if (fieldPosition < ctnSuper.getAllFields().size() &&
+                        !FOOLlib.isSubtype(f.getSymType(), ctnSuper.getAllFields().get(fieldPosition))) { //Overriding
+                    System.out.println("Field type " + fields.indexOf(f) + " of class " + id 
+                            + " not subtype of overridden method from superclass");
+                    System.exit(0);
+                }
+            });
+        
+        methods.stream()
+            .map(n -> (MethodNode) n)
+            .forEach(m -> {
+                int methodPosition = m.getOffset();
+                if (methodPosition < ctnSuper.getAllMethods().size() &&
+                        !FOOLlib.isSubtype(m.getSymType(), ctnSuper.getAllMethods().get(methodPosition))) {
+                    System.out.println("Method of type " + methods.indexOf(m) + " of class " + id 
+                            + " not subtype of overridden method from superclass");
+                    System.exit(0);
+                }
+            });
+        }
+//        for (int i = 0; i < ctnSuper.getAllFields().size(); i++) {
+//            if (!FOOLlib.isSubtype(ctnSuper.getAllFields().get(i).typeCheck()
+//                    , ctnSub.getAllFields().get(i).typeCheck())) {
+//                System.out.println("field type" + i + " of superclass not subtype of current");
+//                System.exit(0);
+//            }
+//        }
+//        
+//        for (int i = 0; i < ctnSuper.getAllMethods().size(); i++) {
+//            if (!FOOLlib.isSubtype(ctnSuper.getAllMethods().get(i).typeCheck()
+//                    , ctnSub.getAllMethods().get(i).typeCheck())) {
+//                System.out.println("method type" + i + " of superclass not subtype of current");
+//                System.exit(0);
+//            }
+//        }
         return symType;
     }
 
@@ -87,27 +113,16 @@ public class ClassNode implements Node, DecNode {
             dispatchTable.addAll(FOOLlib.getDispatchTables().get(-superEntry.getOffset() - 2));
         }
         FOOLlib.getDispatchTables().add(dispatchTable);
-//        ArrayList<Node> sortedMethods = new ArrayList<>(methods);
-//        Collections.sort(sortedMethods, new Comparator<Node>() {
-//           public int compare(Node n1, Node n2) {
-//               Integer oN1 = ((MethodNode)n1).getOffset();
-//               Integer oN2 = ((MethodNode)n2).getOffset();
-//               return oN1.compareTo(oN2);
-//           }
-//        });
-        
         for (Node m : methods) {
             m.codeGeneration();
             int offset = ((MethodNode)m).getOffset();
             String label = ((MethodNode)m).getLabel();
-            System.out.println("adding method: " + label + ",at offset:" +offset +" for class " + id + ", dispatchTable.Size(): " + dispatchTable.size());
             if (offset >= dispatchTable.size()) {
                 dispatchTable.add(offset, label);
             } else {
                 dispatchTable.set(offset, label);
             }
         }
-        System.out.println("class: " + id + ", dispatchTable: " + dispatchTable);
         
         //DispatchTable Create ok
         String incrementHP = "push 1\n" + "lhp\n" + "add\n" + "shp\n";

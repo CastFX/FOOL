@@ -31,10 +31,12 @@ public class ProgLetInNode implements Node {
     }
 
     public Node typeCheck() {
+        for (Node cl : classlist) {
+            cl.typeCheck();
+        }
         for (Node dec : declist) {
             dec.typeCheck();
         }
-        ;
         return exp.typeCheck();
     }
 

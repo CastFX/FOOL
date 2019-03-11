@@ -298,7 +298,7 @@ public class FOOLParser extends Parser {
 				        HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
 						HashSet<String> names = new HashSet<String>();
 						STentry superEntry = null;
-						String superId = "";
+						String superId = null;
 				        STentry entry = new STentry(0, ctn, offset_0--);
 						FOOLParsingLib.addClassToSymTable(symTable.get(0), (((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), entry, (((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getLine():0));
 				        //NestingLevel = 1 Dentro la classe
@@ -333,8 +333,8 @@ public class FOOLParser extends Parser {
 				}
 
 
+						FOOLlib.getSuperTypeMap().put((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), superId);
 						ClassNode c = new ClassNode((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), ctn, superId, superEntry);
-						FOOLlib.getSuperTypeMap().put((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null));
 						_localctx.astlist.add(c);
 				setState(56); match(LPAR);
 
