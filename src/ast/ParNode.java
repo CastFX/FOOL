@@ -26,7 +26,7 @@ public class ParNode implements Node, DecNode {
     @Override
     public Node getSymType() {
         // TODO Auto-generated method stub
-        return null;
+        return type;
     }
 
 }

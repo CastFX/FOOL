@@ -136,10 +136,12 @@ cllist returns [ArrayList<Node> astlist]
 		ArrayList<Node> parTypes = new ArrayList<Node>();
 		int paroffset = 1; }
     ( fid=ID COLON fht=hotype { 
+    	// MODIFICA HIGH ORDER???
 		parTypes.add($fht.ast);
 		m.addPar(new ParNode($fid.text,$fht.ast));
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $fid.text, nestingLevel, $fht.ast, paroffset++, $fid.line);}
 	( COMMA id=ID COLON ht=hotype {
+		// MODIFICA HIGH ORDER???
 		parTypes.add($ht.ast);
 		m.addPar(new ParNode($id.text,$ht.ast));
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $id.text, nestingLevel, $ht.ast, paroffset++, $id.line);}
@@ -173,13 +175,38 @@ declist returns [ArrayList<Node> astlist]
 		$astlist.add(v);                                 
 		HashMap<String,STentry> hm = symTable.get(nestingLevel);
 		FOOLParsingLib.addVarSTentryToSymbolTable(hm, $i.text, nestingLevel, $ht.ast, 
-			nestingLevel == 0 ? offset_0-- : offset--, $i.line);}
-	| FUN i=ID COLON t=type {//inserimento di ID nella symtable
+			nestingLevel == 0 ? offset_0-- : offset--, $i.line);
+		
+		// HIGH ORDER
+		if ($ht.ast instanceof ArrowTypeNode) {
+        	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
+			// funzionale) occupa un offset doppio.
+			if (nestingLevel == 0) {
+				offset_0--;
+			} else {
+				offset--;
+			}
+        }			
+	}
+	| FUN i=ID COLON t=type {
+		//inserimento di ID nella symtable
 		FunNode f = new FunNode($i.text,$t.ast);      
 		$astlist.add(f);                           
 		HashMap<String,STentry> hm = symTable.get(nestingLevel);
+		
+
 		FOOLParsingLib.addFunSTentryToSymbolTable(hm, $i.text, nestingLevel, $t.ast, 
-			nestingLevel == 0 ? offset_0-- : offset--, $i.line);
+			nestingLevel == 0 ? offset_0 : offset, $i.line);
+		
+		// HIGH ORDER
+		// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
+		// funzionale) occupa un offset doppio.
+	    if (nestingLevel == 0) {
+			offset_0-=2;
+		} else {
+			offset-=2;
+		}	
+		
 		STentry entry = hm.get($i.text);
 		//creare una nuova hashmap per la symTable
 		nestingLevel++;
@@ -191,14 +218,35 @@ declist returns [ArrayList<Node> astlist]
 	(fid=ID COLON fht=hotype { 
 		parTypes.add($fht.ast);
 		f.addPar(new ParNode($fid.text,$fht.ast));
+		
+		// HIGH ORDER
+		if ($fht.ast instanceof ArrowTypeNode) {
+             paroffset++;	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
+						    // funzionale) occupa un offset doppio:
+        }
+        
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $fid.text, nestingLevel, $fht.ast, paroffset++, $fid.line);}
 	(COMMA id=ID COLON ht=hotype {
 		parTypes.add($ht.ast);
         f.addPar(new ParNode($id.text,$ht.ast));
+        
+        // HIGH ORDER
+        if ($ht.ast instanceof ArrowTypeNode) {
+             paroffset++;	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
+						    // funzionale) occupa un offset doppio:
+        }
+        
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $id.text, nestingLevel, $ht.ast, paroffset++, $id.line);}
 	)*
 	)? 
-	RPAR { entry.addType(new ArrowTypeNode(parTypes,$t.ast)); }
+	RPAR { 
+		
+		// HIGH ORDER
+		ArrowTypeNode completeType = new ArrowTypeNode(parTypes, $t.ast);
+		entry.addType(completeType); 
+		f.setSymType(completeType); // Imposto il symType per poterlo ritornare con getSymType
+              					    // che ritorna il tipo messo in symbol table.
+	}
 	(LET d=declist IN {f.addDec($d.astlist);})? e=exp {
 		f.addBody($e.ast);
         //rimuovere la hashmap corrente poich esco dallo scope               
@@ -206,10 +254,11 @@ declist returns [ArrayList<Node> astlist]
 	) SEMIC
     )+          
 	;
-	
-hotype returns [Node ast] 
-	: a=arrow {$ast = $a.ast;} | t=type {$ast = $t.ast;}
-	;
+
+hotype	returns [Node ast]
+  : t=type {$ast = $t.ast;} 
+  | a=arrow	{$ast = $a.ast;}
+;	
 	
 type returns [Node ast]
 	: INT  {$ast=new IntTypeNode();}
@@ -219,10 +268,18 @@ type returns [Node ast]
 	;	
 
 arrow returns [Node ast]
-	: LPAR (hotype (COMMA hotype)* )? RPAR ARROW type {
-		return null;
-	};          
-
+	: LPAR{
+		ArrayList<Node> arglist = new ArrayList<Node>();
+	} 
+	(t=hotype {arglist.add($t.ast);}
+		(COMMA ty=hotype {
+			arglist.add($ty.ast);
+		})*
+	)?
+	RPAR{}
+	ARROW	
+	typ=type {$ast = new ArrowTypeNode(arglist, $typ.ast);}
+	;
 
 exp	returns [Node ast]
  	: f=term {$ast= $f.ast;} 

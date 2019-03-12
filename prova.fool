@@ -1,4 +1,151 @@
 let
+
+  class List (f:int, r:List) {
+    fun first:int() f;
+    fun rest:List() r; 
+  }
+  
+  fun printList:List (l:List) 
+      let  
+        fun makeList:List (l:List, i:int) new List (i,l);
+      in 
+         if (l == null) 
+           then {null}
+           else {makeList(printList(l.rest()),print(l.first()))};                 
+  
+  fun append:List (l1:List, l2:List)
+      if (l1 == null)
+        then {l2}
+        else {new List(l1.first(), append(l1.rest(),l2))} ;  
+    
+  fun filter:List (l:List, accept:(int)->bool) 
+      if (l == null) 
+        then {null}
+        else {if ( accept(l.first()) )
+                then { new List( l.first(), filter(l.rest(),accept) ) }
+                else { filter(l.rest(),accept) }
+             };
+         
+  fun quicksort:List (l:List, rel:(int,int)->bool)    
+      let
+        var pivot:int = if (l==null) then {0} else {l.first()};       
+        fun beforePivot:bool (x:int) rel(x,pivot);
+        fun afterPivot:bool (x:int) !(rel(x,pivot));
+      in        
+         if (l == null) 
+           then {null}
+           else {append( 
+                   quicksort( filter(l.rest(),beforePivot), rel ),                  
+                   new List(  pivot,  quicksort( filter(l.rest(),afterPivot), rel )  )                       
+                 )};
+                                   
+  fun inc:bool (x:int,y:int) x<=y;
+  fun dec:bool (x:int,y:int) x>=y;
+               
+  var l:List = new List (2, 
+                    new List(1,
+                        new List(4,
+                            new List (3, 
+                                new List(2,
+                                    new List(5,null))))));
+  
+in printList(quicksort(l,inc));
+
+
+/* SERBATOIO ESEMPI
+
+//Higher Order ( WORKS )
+let
+	fun g:int(x:(int,int)->int)
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+
+----------------------------
+
+//Object Orieted ( WORKS )
+
+let
+
+  class Account (money:int) {
+    fun getMon:int () money;
+  }
+  
+  class TradingAcc extends Account (invested:int) {
+    fun getInv:int () invested;
+  }
+  
+  class BankLoan (loan: Account) {
+    fun getLoan:Account () loan;
+    fun openLoan:Account (m:TradingAcc) if ((m.getMon()+m.getInv())>=30000) 
+      then {new Account(loan.getMon())} 
+      else {null};
+  } 
+  
+  class MyBankLoan extends BankLoan (loan: TradingAcc) {
+    fun openLoan:TradingAcc (l:Account) if (l.getMon()>=20000) 
+      then {new TradingAcc(loan.getMon(),loan.getInv())} 
+      else {null};
+  } 
+    
+  var bl:BankLoan = new MyBankLoan(new TradingAcc(50000,40000));
+  var myTradingAcc:TradingAcc = new TradingAcc(20000,5000);
+  var myLoan:Account = bl.openLoan(myTradingAcc);
+      
+in print(if (myLoan==null) then {0} else {myLoan.getMon()});  
+
+
+
+
+
+---------------------------
+let 
+  var x:int = 1;
+  var b:bool = true;
+in
+  print (if (b) then { x+1 } else { x+2 });
+---------------
+let 
+  fun f:int (i:int, j:int) i+j;
+in
+  print (f(3,5));
+----------------
+let
+  var y:int = 5+2;
+  fun f:bool (n:int, m:int)
+    let 
+      var x:int = m;
+  in x==y;   
+in  
+  print ( 
+    if f(y,8) 
+      then { false }
+      else { 10 }
+  ); 
+-----------------
+
+let
+	fun g:int(x:(int,int)->int)
+		x(5,7);
+	fun f:int(c:int)
+	let
+		fun linsum:int(a:int,b:int)
+			(a+b)*c;
+		in
+			g(linsum);
+in
+	print(f(2));
+  
+-------------------------------------------
+
+let
   class A () {
     fun getFucked:int() 1;
   }
@@ -37,5 +184,6 @@ let
   var e10:E = new E();
   var g11:G = new G();
   
-  var d12:G = if (true) then {null} else {null};
+  var d12:G = if (true) then {a7} else {g11};
 in print (d12.getFucked());
+*/

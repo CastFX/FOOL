@@ -30,6 +30,7 @@ public class VarNode implements Node, DecNode {
         return exp.codeGeneration();
     }
 
+    //HIGH ORDER
     @Override
     public Node getSymType() {
         return type;

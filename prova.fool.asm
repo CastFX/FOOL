@@ -1,7 +1,7 @@
 push 0
 /*ClassCode:*/
 
-/*ClassNode: A*/
+/*ClassNode: List*/
 lhp
 push function0
 lhp
@@ -10,9 +10,6 @@ push 1
 lhp
 add
 shp
-
-/*ClassNode: B*/
-lhp
 push function1
 lhp
 sw
@@ -21,72 +18,34 @@ lhp
 add
 shp
 
-/*ClassNode: C*/
-lhp
-push function2
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-/*ClassNode: D*/
-lhp
-push function3
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-/*ClassNode: E*/
-lhp
-push function4
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-/*ClassNode: F*/
-lhp
-push function5
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-/*ClassNode: G*/
-lhp
-push function6
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-/*ClassNode: Z*/
-lhp
-push function7
-lhp
-sw
-push 1
-lhp
-add
-shp
-
 /*DeclCode:*/
-push 9998
-lw
+lfp
+push function3
+lfp
+push function4
+lfp
+push function5
+lfp
+push function8
+lfp
+push function9
+lfp
+push function10
+push 2
+push 1
+push 4
+push 3
+push 2
+push 5
+push -1
 lhp
 sw
+push 1
 lhp
+add
+shp
+lhp
+sw
 push 1
 lhp
 add
@@ -100,7 +59,19 @@ push 1
 lhp
 add
 shp
-push 9993
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
 lw
 lhp
 sw
@@ -109,7 +80,19 @@ push 1
 lhp
 add
 shp
-push 9994
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
 lw
 lhp
 sw
@@ -118,7 +101,19 @@ push 1
 lhp
 add
 shp
-push 9992
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
 lw
 lhp
 sw
@@ -127,28 +122,194 @@ push 1
 lhp
 add
 shp
+lhp
+sw
 push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+
+/*ExpCod(ProgLetIn):*/
+lfp
+lfp
+push -11
+lfp
+add
+lw
+push -12
+lfp
+add
+lw
+push -15
+lfp
+add
+lw
+push -9
+lfp
+add
+lw
+push -10
+lfp
+add
+lw
+js
+push -3
+lfp
+add
+lw
+push -4
+lfp
+add
+lw
+js
+halt
+
+/*MethodNode: first*/
+function0:
+cfp
+lra
+push -1
+lfp
+lw
+add
+lw
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+/*MethodNode: rest*/
+function1:
+cfp
+lra
+push -2
+lfp
+lw
+add
+lw
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+/*FunNode: makeList*/
+function2:
+cfp
+lra
+push 2
+lfp
+add
+lw
+push 1
+lfp
+add
+lw
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+srv
+sra
+pop
+pop
+pop
+sfp
+lrv
+lra
+js
+
+/*FunNode: printList*/
+function3:
+cfp
+lra
+lfp
+push function2
+push 1
+lfp
+add
+lw
+push -1
+/*EqualsNode*/
+beq label2
+push 0
+b label3
+label2: 
+push 1
+label3: 
 /*IfNode, check if topStack == 1*/
 push 1
 beq label0
-push -1
-b label1
-label0: 
-push -1
-label1: 
+lfp
 
-/*ExpCod(ProgLetIn):*/
-
-ClassCallNode: getFucked:
+ClassCallNode: first:
 lfp
 /*Risalita AR*/
 lfp
-push -15
+push 1
 add
 lw
 /*Risalita AR*/
 lfp
-push -15
+push 1
 add
 lw
 lw
@@ -157,106 +318,710 @@ add
 lw
 js
 print
-halt
+lfp
 
-/*MethodNode: getFucked*/
-function0:
-cfp
-lra
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
 push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -3
+lfp
+lw
+add
+lw
+push -4
+lfp
+lw
+add
+lw
+js
+push -2
+lfp
+add
+lw
+push -3
+lfp
+add
+lw
+js
+b label1
+label0: 
+push -1
+label1: 
 srv
+pop
+pop
 sra
+pop
 pop
 sfp
 lrv
 lra
 js
 
-/*MethodNode: getFucked*/
-function1:
-cfp
-lra
-push 2
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: getFucked*/
-function2:
-cfp
-lra
-push 3
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: getFucked*/
-function3:
-cfp
-lra
-push 4
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-/*MethodNode: getFucked*/
+/*FunNode: append*/
 function4:
 cfp
 lra
-push 5
+push 1
+lfp
+add
+lw
+push -1
+/*EqualsNode*/
+beq label6
+push 0
+b label7
+label6: 
+push 1
+label7: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label4
+
+ClassCallNode: first:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+lfp
+push 2
+lfp
+add
+lw
+
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -5
+lfp
+lw
+add
+lw
+push -6
+lfp
+lw
+add
+lw
+js
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+b label5
+label4: 
+push 2
+lfp
+add
+lw
+label5: 
 srv
 sra
+pop
+pop
 pop
 sfp
 lrv
 lra
 js
 
-/*MethodNode: getFucked*/
+/*FunNode: filter*/
 function5:
 cfp
 lra
-push 6
+push 1
+lfp
+add
+lw
+push -1
+/*EqualsNode*/
+beq label10
+push 0
+b label11
+label10: 
+push 1
+label11: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label8
+lfp
+
+ClassCallNode: first:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+js
+/*IfNode, check if topStack == 1*/
+push 1
+beq label12
+lfp
+push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -7
+lfp
+lw
+add
+lw
+push -8
+lfp
+lw
+add
+lw
+js
+b label13
+label12: 
+
+ClassCallNode: first:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+lfp
+push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -7
+lfp
+lw
+add
+lw
+push -8
+lfp
+lw
+add
+lw
+js
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+label13: 
+b label9
+label8: 
+push -1
+label9: 
 srv
 sra
+pop
+pop
+pop
 pop
 sfp
 lrv
 lra
 js
 
-/*MethodNode: getFucked*/
+/*FunNode: beforePivot*/
 function6:
 cfp
 lra
-push 7
+lfp
+push -2
+lfp
+lw
+add
+lw
+push 1
+lfp
+add
+lw
+push 3
+lfp
+lw
+add
+lw
+push 2
+lfp
+lw
+add
+lw
+js
 srv
 sra
+pop
 pop
 sfp
 lrv
 lra
 js
 
-/*MethodNode: getFucked*/
+/*FunNode: afterPivot*/
 function7:
 cfp
 lra
-push 8
+lfp
+push -2
+lfp
+lw
+add
+lw
+push 1
+lfp
+add
+lw
+push 3
+lfp
+lw
+add
+lw
+push 2
+lfp
+lw
+add
+lw
+js
+push 1
+beq label18
+push 1
+b label19
+label18: 
+push 0
+label19: 
 srv
 sra
+pop
+pop
+sfp
+lrv
+lra
+js
+
+/*FunNode: quicksort*/
+function8:
+cfp
+lra
+push 1
+lfp
+add
+lw
+push -1
+/*EqualsNode*/
+beq label16
+push 0
+b label17
+label16: 
+push 1
+label17: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label14
+
+ClassCallNode: first:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+b label15
+label14: 
+push 0
+label15: 
+lfp
+push function6
+lfp
+push function7
+push 1
+lfp
+add
+lw
+push -1
+/*EqualsNode*/
+beq label22
+push 0
+b label23
+label22: 
+push 1
+label23: 
+/*IfNode, check if topStack == 1*/
+push 1
+beq label20
+lfp
+push -2
+lfp
+add
+lw
+lfp
+push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+lfp
+push -5
+lfp
+add
+lw
+push -6
+lfp
+add
+lw
+
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -7
+lfp
+lw
+add
+lw
+push -8
+lfp
+lw
+add
+lw
+js
+push -9
+lfp
+lw
+add
+lw
+push -10
+lfp
+lw
+add
+lw
+js
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+lfp
+push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+lfp
+push -3
+lfp
+add
+lw
+push -4
+lfp
+add
+lw
+
+ClassCallNode: rest:
+lfp
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+/*Risalita AR*/
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+push -7
+lfp
+lw
+add
+lw
+push -8
+lfp
+lw
+add
+lw
+js
+push -9
+lfp
+lw
+add
+lw
+push -10
+lfp
+lw
+add
+lw
+js
+push -5
+lfp
+lw
+add
+lw
+push -6
+lfp
+lw
+add
+lw
+js
+b label21
+label20: 
+push -1
+label21: 
+srv
+pop
+pop
+pop
+pop
+pop
+sra
+pop
+pop
+pop
+pop
+sfp
+lrv
+lra
+js
+
+/*FunNode: inc*/
+function9:
+cfp
+lra
+push 1
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+bleq label24
+push 0
+b label25
+label24: 
+push 1
+label25: 
+srv
+sra
+pop
+pop
+pop
+sfp
+lrv
+lra
+js
+
+/*FunNode: dec*/
+function10:
+cfp
+lra
+push 2
+lfp
+add
+lw
+push 1
+lfp
+add
+lw
+bleq label26
+push 0
+b label27
+label26: 
+push 1
+label27: 
+srv
+sra
+pop
+pop
 pop
 sfp
 lrv
