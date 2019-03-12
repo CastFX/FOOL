@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 bin/
 /FOOL.interp
 /FOOL.tokens
@@ -6,3 +7,6 @@ bin/
 /FOOLLexer.tokens
 /FOOLParser.java
 
+=======
+bin/
+>>>>>>> oop/christian
