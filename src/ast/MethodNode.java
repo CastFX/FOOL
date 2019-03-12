@@ -4,23 +4,20 @@ import java.util.ArrayList;
 
 import lib.FOOLlib;
 
-public class FunNode implements Node, DecNode {
+public class MethodNode implements Node, DecNode {
 
     private String id;
     private Node type;
     private ArrayList<Node> parlist = new ArrayList<Node>();
     private ArrayList<Node> declist = new ArrayList<Node>();
     private Node exp;
-    //HIGH ORDER
     private Node symType;
-
-    public FunNode(String i, Node t) {
-        id = i;
-        type = t;
-    }
+    private String label;
+    private int offset;
     
-    public FunNode(String i, Node t, Node st) {
+    public MethodNode(String i, int off, Node t, Node st) {
         id = i;
+        offset = off;
         type = t;
         symType = st;
     }
@@ -37,91 +34,76 @@ public class FunNode implements Node, DecNode {
         parlist.add(p);
     }
 
-    public String toPrint(String s) {
+    @Override
+    public String toPrint(String indent) {
         String parlstr = "";
         for (Node par : parlist) {
-            parlstr += par.toPrint(s + "  ");
+            parlstr += par.toPrint(indent + "  ");
         }
         String declstr = "";
         for (Node dec : declist) {
-            declstr += dec.toPrint(s + "  ");
+            declstr += dec.toPrint(indent + "  ");
         }
-        return s + "Fun:" + id + "\n" 
-            + type.toPrint(s + "  ") 
-            + parlstr 
-            + declstr 
-            + exp.toPrint(s + "  ");
+        ;
+        return indent 
+                + "Method:" + id + "\n" 
+                + type.toPrint(indent + "  ") 
+                + parlstr 
+                + declstr 
+                + exp.toPrint(indent + "  ");
     }
 
+    @Override
     public Node typeCheck() {
         for (Node dec : declist) {
             dec.typeCheck();
         }
         if (!FOOLlib.isSubtype(exp.typeCheck(), type)) {
-            System.out.println("Incompatible value for variable in function");
+            System.out.println("Incompatible value for variable in method");
             System.exit(0);
         }
         return null;
     }
 
+    @Override
     public String codeGeneration() {
+        label = FOOLlib.freshFunLabel();
         String declCode = "";
         for (Node dec : declist)
             declCode += dec.codeGeneration();
         String popDecl = "";
-        
-        //HIGH ORDER
-        for (Node dec:declist) {
-  		  if (dec instanceof DecNode) {
-  			  if (((DecNode) dec).getSymType() instanceof ArrowTypeNode) {
-  				  //Dichiarazione di un ID di tipo funzionale
-  				  popDecl+="pop\n";
-  			  }
-  		  }
-  		  popDecl+="pop\n";
-  	    }
-        //HIGH ORDER
+        for (Node dec : declist)
+            popDecl += "pop\n";
         String popParl = "";
-        for (Node par:parlist) {
-  		  if (par instanceof DecNode) {
-  			  if (((DecNode) par).getSymType() instanceof ArrowTypeNode) {
-  				  // Parametro di tipo funzionale
-  				  popParl+="pop\n";
-  			  }
-  		  }
-  		  popParl+="pop\n";
-  	  	}
-        
-        String funl = FOOLlib.freshFunLabel();
-        FOOLlib.putCode("/*FunNode: " + id + "*/\n" +
-                funl + ":\n" + 
+        for (Node par : parlist)
+            popParl += "pop\n";
+        FOOLlib.putCode("/*MethodNode: " + id + "*/\n" +
+                label + ":\n" + 
                 "cfp\n" + // setta $fp a $sp
                 "lra\n" + // inserisce return address
                 declCode + // inresisce dichiarazioni locali
-                exp.codeGeneration() + 
-                "srv\n" + // pop del return value
+                exp.codeGeneration() + "srv\n" + // pop del return value
                 popDecl + // pop delle dichiarazioni
                 "sra\n" + // pop del return address
                 "pop\n" + // pop di AL
                 popParl + // pop dei parametri
                 "sfp\n" + // setto $fp al valore del CL
                 "lrv\n" + // risultato della funzione sullo stack
-                "lra\n" + 
-                "js\n" // salta a $ra
+                "lra\n" + "js\n" // salta a $ra
         );
-        
-        //HIGH ORDER
-        return "lfp\n"+ //Indir (fp) a questo AR (in reg $fp)
- 			   "push "+ funl + "\n"; //Indir della funzione (etichetta generata)
+        return "";
     }
 
-    // HIGH ORDER
     @Override
     public Node getSymType() {
         return symType;
     }
     
-    public void setSymType(Node symType) {
-		this.symType = symType;
-	}
+    public String getLabel() {
+        return label;
+    }
+    
+    public int getOffset() {
+        return offset;
+    }
 }

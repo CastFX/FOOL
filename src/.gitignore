@@ -1,12 +1,12 @@
-<<<<<<< HEAD
-bin/
+/SVM.interp
+/SVM.tokens
+/SVMLexer.interp
+/SVMLexer.java
+/SVMLexer.tokens
+/SVMParser.java
 /FOOL.interp
 /FOOL.tokens
 /FOOLLexer.interp
 /FOOLLexer.java
 /FOOLLexer.tokens
 /FOOLParser.java
-
-=======
-bin/
->>>>>>> oop/christian
