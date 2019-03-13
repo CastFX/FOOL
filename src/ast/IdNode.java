@@ -47,26 +47,25 @@ public class IdNode implements Node {
      */
     public String codeGeneration() {
     	//HIGH ORDER
-    	String getAR="";
+        String getAR="";
         for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
-      	  getAR+="lw\n";
+            getAR+="lw\n";
         if (!(entry.getType() instanceof ArrowTypeNode)) {
-  		  return "push "+entry.getOffset()+"\n"+			 
-  				 "lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-  				                //in cui � dichiarata la variabile			 
-  				 "add\n"+
-  				 "lw\n";
+            return "push " + entry.getOffset() + "\n" +			 
+            		"lfp\n" + getAR + //risalgo la catena statica per ottenere l'indirizzo dell'AR in cui � dichiarata la variabile			 
+                    "add\n" +
+                    "lw\n";
         } else {
       	  //Functional case
-      	  return "push "+entry.getOffset()+"\n"+			 
-  			 "lfp\n"+getAR+ //Risalgo la catena statica per ottenere l'indirizzo dell'AR 
-  			                //in cui � dichiarata la funzione (OFFSET ID)		 
-  			 "add\n"+
-  			 "lw\n"+
-      	  	 "push "+(entry.getOffset()-1)+"\n"+
-      	  	 "lfp\n"+getAR+ //Risalgo la catena statica per ottenere l'indirizzio della funzione (OFFSET ID -1)
-      	  	 "add\n"+
-  			 "lw\n";
+      	  return "push " + entry.getOffset() + "\n" +			 
+      	      "lfp\n" + getAR +//Risalgo la catena statica per ottenere l'indirizzo dell'AR 
+      	                      //in cui � dichiarata la funzione (OFFSET ID)		 
+      	      "add\n" +
+      	      "lw\n" +
+      	      "push " + (entry.getOffset() - 1) + "\n" +
+      	      "lfp\n" + getAR + //Risalgo la catena statica per ottenere l'indirizzio della funzione (OFFSET ID -1)
+      	      "add\n" +
+      	      "lw\n";
         }
     }
 }

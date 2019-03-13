@@ -55,41 +55,40 @@ public class CallNode implements Node {
      */
     public String codeGeneration() {
     	if (this.entry.isMethod()) {
-    		//Ritorno codice Object Oriented
-	        String parCode = "";
-	        for (int i = parlist.size() - 1; i >= 0; i--)
-	            parCode += parlist.get(i).codeGeneration();
-	        String getAR = "";
-	        for (int i = 0; i < nestingLevel - entry.getNestinglevel() + (entry.isMethod() ? 1 : 0) ; i++)
-	            getAR += "lw\n";
-	        return "/*CallNode: " + id + "()*/\n" +
-	                "lfp\n" + parCode +      // allocazione valori parametri
-	                "lfp\n" + getAR +       // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui 
-	                                       //è dichiarata la funzione (Access Link)
-	                "push " + entry.getOffset() + "\n" +
-	                "lfp\n" + getAR +       // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la
-	                                        // funzione (Access Link)
-	                "add\n" + "lw\n" +      // carica sullo stack l'indirizzo della funzione
-	                "js\n";                 // effettua il salto
+    	    //Ritorno codice Object Oriented
+    	    String parCode = "";
+    	    for (int i = parlist.size() - 1; i >= 0; i--)
+    	        parCode += parlist.get(i).codeGeneration();
+    	    String getAR = "";
+	    for (int i = 0; i < nestingLevel - entry.getNestinglevel() + (entry.isMethod() ? 1 : 0) ; i++)
+	        getAR += "lw\n";
+	    return "lfp\n" + 			//Control Link
+	        parCode +               // allocazione valori parametri
+	        "lfp\n" + getAR +       // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui 
+	                                //è dichiarata la funzione (Access Link)
+	        "push " + entry.getOffset() + "\n" +
+	        "lfp\n" + getAR +       // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la
+	                                // funzione (Access Link)
+	        "add\n" + "lw\n" +      // carica sullo stack l'indirizzo della funzione
+	        "js\n";                 // effettua il salto
     	}
     	//Ritorno codice Higher Order
     	String parCode="";
-  	  	for (int i=parlist.size()-1; i>=0; i--) 
-  		  parCode+=parlist.get(i).codeGeneration();
+  	  	for (int i = parlist.size() - 1; i >= 0; i--) 
+  		  parCode += parlist.get(i).codeGeneration();
         String getAR="";
-        for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
-      	  getAR+="lw\n";      
-  	  	return "lfp\n"+ //Contro Link
-  			 parCode+ //allocazione valori parametri			          		 
-  			 "push "+(entry.getOffset())+"\n"+			 
-  			 "lfp\n"+getAR+ //Risalgo la catena statica per ottenere indirizzo dichiarazione funzione (OFFSET ID)
-  			 "add\n"+
-  			 "lw\n"+ 
-  			 "push "+(entry.getOffset()-1)+"\n"+
-  			 "lfp\n"+getAR+ //Risalgo la catena statica per ottenere indirizzo della funzione (OFFSET ID-1)
-  			 "add\n"+
-  			 "lw\n"+
-  	         "js\n"; //effettua il salto
-    	
+        for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
+      	  getAR += "lw\n";      
+        return "lfp\n" + //Control Link
+            parCode + //allocazione valori parametri			          		 
+            "push " + (entry.getOffset()) + "\n" +			 
+            "lfp\n" + getAR + //Risalgo la catena statica per ottenere indirizzo dichiarazione funzione (OFFSET ID)
+            "add\n" +
+            "lw\n" + 
+            "push " +(entry.getOffset()-1)+"\n"+
+            "lfp\n" + getAR +  //Risalgo la catena statica per ottenere indirizzo della funzione (OFFSET ID-1)
+            "add\n" +
+            "lw\n" +
+            "js\n"; //effettua il salto
     }
 }

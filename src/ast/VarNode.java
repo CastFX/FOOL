@@ -19,6 +19,7 @@ public class VarNode implements Node, DecNode {
     }
 
     public Node typeCheck() {
+    	//Contenuto dell'exp deve essere sottotipo del tipo della variabile
         if (!FOOLlib.isSubtype(exp.typeCheck(), type)) {
             System.out.println("Incompatible value for variable: " + id + "\nexp:" + exp.typeCheck().toPrint(" ") +  ", type:" + type.toPrint(" "));
             System.exit(0);
@@ -27,7 +28,7 @@ public class VarNode implements Node, DecNode {
     }
 
     public String codeGeneration() {
-        return exp.codeGeneration();
+    	return exp.codeGeneration();
     }
 
     //HIGH ORDER

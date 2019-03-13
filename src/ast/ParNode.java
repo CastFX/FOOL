@@ -19,13 +19,13 @@ public class ParNode implements Node, DecNode {
         return null;
     }
 
+    //non usato
     public String codeGeneration() {
         return "";
     }
 
     @Override
     public Node getSymType() {
-        // TODO Auto-generated method stub
         return type;
     }
 

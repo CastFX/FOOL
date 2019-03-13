@@ -55,6 +55,8 @@ public class MethodNode implements Node, DecNode {
 
     @Override
     public Node typeCheck() {
+    	//Typecheck di tutte le variabili dichiarate dentro il metodo (secondo la grammatica non si possono dichiarare 
+    	//sotto-funzioni
         for (Node dec : declist) {
             dec.typeCheck();
         }
@@ -69,16 +71,15 @@ public class MethodNode implements Node, DecNode {
     public String codeGeneration() {
         label = FOOLlib.freshFunLabel();
         String declCode = "";
-        for (Node dec : declist)
+        for (Node dec : declist) //Genero il codice delle variabili dichiarate dentro il metodo
             declCode += dec.codeGeneration();
-        String popDecl = "";
-        for (Node dec : declist)
+        String popDecl = ""; 
+        for (Node dec : declist) //E poi dovrò rimuoverle
             popDecl += "pop\n";
         String popParl = "";
-        for (Node par : parlist)
+        for (Node par : parlist) //Poi devo anche rimuovere i parametri
             popParl += "pop\n";
-        FOOLlib.putCode("/*MethodNode: " + id + "*/\n" +
-                label + ":\n" + 
+        FOOLlib.putCode(label + ":\n" + 
                 "cfp\n" + // setta $fp a $sp
                 "lra\n" + // inserisce return address
                 declCode + // inresisce dichiarazioni locali

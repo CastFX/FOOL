@@ -51,7 +51,7 @@ public class STentry {
         return isMethod;
     }
 
-    //TODO Chiedere se per la copia devo creare copie anche dei tipi
+    //DeepCopy per STentry
     public STentry deepCopy() {
         Node typeCopy = null;
         if (type instanceof BoolTypeNode) {

@@ -21,6 +21,7 @@ public class FieldNode implements Node, DecNode {
         return null;
     }
 
+    //Non usato
     public String codeGeneration() {
         return "";
     }

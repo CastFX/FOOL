@@ -1,4 +1,4 @@
-package ast;
+	package ast;
 
 public interface Node {
 

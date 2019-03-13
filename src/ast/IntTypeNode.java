@@ -2,21 +2,21 @@ package ast;
 
 public class IntTypeNode implements Node {
 
-    public IntTypeNode() {
-    }
+	public IntTypeNode() {
+	}
 
-    public String toPrint(String s) {
-        return s + "IntType\n";
-    }
+	public String toPrint(String s) {
+		return s + "IntType\n";
+	}
 
-    // non utilizzato
-    public Node typeCheck() {
-        return null;
-    }
+	// non utilizzato
+	public Node typeCheck() {
+		return null;
+	}
 
-    // non utilizzato
-    public String codeGeneration() {
-        return "";
-    }
+	// non utilizzato
+	public String codeGeneration() {
+		return "";
+	}
 
 }

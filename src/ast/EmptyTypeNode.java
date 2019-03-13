@@ -7,15 +7,15 @@ public class EmptyTypeNode implements Node {
         return indent + "EmptyTypeNode\n";
     }
 
+    //Non usato
     @Override
     public Node typeCheck() {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    //Non usato
     @Override
     public String codeGeneration() {
-        // TODO Auto-generated method stub
         return null;
     }
 

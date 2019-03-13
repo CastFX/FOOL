@@ -31,6 +31,8 @@ public class ProgLetInNode implements Node {
     }
 
     public Node typeCheck() {
+    	
+    	//Aggiunta typecheck anche delle classi
         for (Node cl : classlist) {
             cl.typeCheck();
         }
@@ -43,17 +45,14 @@ public class ProgLetInNode implements Node {
     public String codeGeneration() {
         String declCode = "";
         String classCode = "";
-        for (Node cl : classlist) {
+        for (Node cl : classlist) { //Genero il codice anche delle classi
             classCode += cl.codeGeneration();
         }
         for (Node dec : declist)
             declCode += dec.codeGeneration();
-        return "push 0\n" + 
-                "/*ClassCode:*/\n" +
+        return "push 0\n" +
                 classCode + "\n" +
-                "/*DeclCode:*/\n" +
                 declCode + "\n" +
-                "/*ExpCod(ProgLetIn):*/\n" +
                 exp.codeGeneration() + 
                 "halt\n" + 
                 FOOLlib.getCode();

@@ -23,10 +23,10 @@ public class IfNode implements Node {
             System.out.println("non boolean condition in if");
             System.exit(0);
         }
-
         Node t = th.typeCheck();
         Node e = el.typeCheck();
-        System.out.println("IfnodeTypecheck " + t.toPrint("") + e.toPrint(""));
+        
+        //Controllo che siano uno il subtype dell'altro, e ritorno il supertipo
         if (FOOLlib.isSubtype(t, e)) {
             return e;
         }
@@ -42,22 +42,19 @@ public class IfNode implements Node {
         //class E extends C
         //A x = if (cond) then (D) else (E)
         //int i = if (bool) then (bool) else (int)
-        //
+        //Trovo il primo common ancestor per avere un tipo minimo valido per entrambi i branch
         Node lca = FOOLlib.lowestCommonAncestor(t, e);
-        if (lca == null) {
+        if (lca == null) { //Se non c'è non è possibile ritornare un tipo valido per entrambi i branch
             System.out.println("Incompatible types in then-else branches");
             System.exit(0);
-        } else {
-            return lca;
         }
-        return null;
+        return lca;
     }
 
     public String codeGeneration() {
         String l1 = FOOLlib.freshLabel();
         String l2 = FOOLlib.freshLabel();
         return cond.codeGeneration() +
-                "/*IfNode, check if topStack == 1*/\n" +
                 "push 1\n" + "beq " + l1 + "\n" + el.codeGeneration() + "b " + l2 + "\n" + l1
                 + ": \n" + th.codeGeneration() + l2 + ": \n";
     }

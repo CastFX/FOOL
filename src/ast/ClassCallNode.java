@@ -61,32 +61,22 @@ public class ClassCallNode implements Node {
         for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
             getObjectAR += "lw\n";
         
-        String getObjectPointer = "/*Risalita AR*/\n"
-                + "lfp\n"
-                + getObjectAR // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la variabile
-                + "push " + entry.getOffset() + "\n" 
-                + "add\n" 
-                + "lw\n";
+        //Per ottenere il puntatore all'oggetto
+        String getObjectPointer = "lfp\n" + //carico il Frame Pointer corrente
+        		getObjectAR + // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la variabile
+        		"push " + entry.getOffset() + "\n" + //a cui viene sommato l'offset dell'IdNode dell'oggetto
+        		"add\n" + //la somma è l'indirizzo nello stack dell'Object Pointer
+        		"lw\n"; //e poi prendo l'indirizzo del puntatore all'oggetto, ossia l'indirizzo nell'heap dove risiede l'oggetto
 
-        return "\nClassCallNode: " + id + ":\n" +
-                "lfp\n" + //ControlLink
-                parCode +
-                getObjectPointer +
-                getObjectPointer + 
-                "lw\n" + //gets DispatchPointer Address
-                "push " + (methodEntry.getOffset()) + "\n" + //Address of the called Method
+        return "lfp\n" + //Come prima cosa pusho il ControlLink
+                parCode + //Carico sullo stack tutti i parametri
+                getObjectPointer + //Carico sullo stack l'ObjectPointer che mi servirà dopo
+                getObjectPointer + //Carico ancora l'Object Pointer
+                "lw\n" + //All'indirizzo dell'ObjectPointer risiede il Dispatch Pointer della classe 
+                "push " + (methodEntry.getOffset()) + "\n" + //A cui viene sommato l'offset per ottenere il metodo chiamato
                 "add\n" +
-                "lw\n" +
+                "lw\n" + //Si ottiene all'indirizzo della funzione nel codice
                 "js\n"
                 ;
-//        return "lfp\n" + getAR +        // risalgo la catena statica per ottenere l'indirizzo dell'AR 
-//                                        //in cui è dichiarata la funzione (Access Link)
-//                "push " + (methodEntry.getOffset()) + "\n" +
-//                                        // risalgo la catena statica per ottenere l'indirizzo 
-//                                        //dell'AR in cui è dichiarata la funzione (Access Link)
-//                "lfp\n" + getAR + 
-//                "add\n" + 
-//                "sw\n"       
-//                ;
     }
 }

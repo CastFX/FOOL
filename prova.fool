@@ -1,15 +1,45 @@
-let
-	fun g:int(x:(int,int)->int)
-		x(5,7);
-	fun f:int(c:int)
-		let
-			fun linsum:int(a:int,b:int)
-				(a+b)*c;
-		in
-			g(linsum);
-in
-print(f(2));
 
+let
+  class A () {
+    fun getFucked:int() 1;
+  }
+  
+  class B extends A() {
+    fun getFucked:int() 2;
+  }
+  
+  class C extends A() {
+    fun getFucked:int() 3;
+  }
+	
+  class D extends B() {
+    fun getFucked:int() 4;
+  }
+  
+  class E extends D() {
+    fun getFucked:int() 5;
+  }
+  
+  class F extends C() {
+    fun getFucked:int() 6;
+  }
+  
+  class G extends D() {
+    fun getFucked:int() 7;
+  }
+  
+  class Z() {
+    fun getFucked:int() 8;
+  }
+
+  var a7:A = new A();
+  var a8:A = new A();
+  var f9:F = new F();
+  var e10:E = new E();
+  var g11:G = new G();
+  
+  var d12:D = if (true) then {e10} else {g11};
+in print (d12.getFucked());
 /* SERBATOIO ESEMPI
 let
 
@@ -160,6 +190,7 @@ in
   
 -------------------------------------------
 
+
 let
   class A () {
     fun getFucked:int() 1;
@@ -199,6 +230,5 @@ let
   var e10:E = new E();
   var g11:G = new G();
   
-  var d12:G = if (true) then {a7} else {g11};
-in print (d12.getFucked());
+  var d12:D = if (true) then {e10} else {g11};
 */

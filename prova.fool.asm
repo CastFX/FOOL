@@ -1,113 +1,236 @@
 push 0
-/*ClassCode:*/
-
-/*DeclCode:*/
-lfp
+lhp
 push function0
-lfp
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function1
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
 push function2
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function3
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function4
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function5
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function6
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+push function7
+lhp
+sw
+push 1
+lhp
+add
+shp
 
-/*ExpCod(ProgLetIn):*/
-lfp
-push 2
-push -4
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+push 9998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+push 9993
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+push 9994
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+push 9992
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+push 1
+push 1
+beq label0
+push -14
 lfp
 add
 lw
-push -5
+b label1
+label0: 
+push -13
 lfp
+add
+lw
+label1: 
+
+lfp
+lfp
+push -15
+add
+lw
+lfp
+push -15
+add
+lw
+lw
+push 0
 add
 lw
 js
 print
 halt
 
-/*FunNode: g*/
 function0:
 cfp
 lra
-lfp
-push 7
-push 5
-push 2
-lfp
-add
-lw
 push 1
-lfp
-add
-lw
-js
 srv
 sra
-pop
-pop
 pop
 sfp
 lrv
 lra
 js
 
-/*FunNode: linsum*/
 function1:
 cfp
 lra
-push 1
-lfp
-add
-lw
 push 2
-lfp
-add
-lw
-add
-push 1
-lfp
-lw
-add
-lw
-mult
 srv
 sra
-pop
-pop
 pop
 sfp
 lrv
 lra
 js
 
-/*FunNode: f*/
 function2:
 cfp
 lra
-lfp
-push function1
-lfp
-push -2
-lfp
-add
-lw
-push -3
-lfp
-add
-lw
-push -2
-lfp
-lw
-add
-lw
-push -3
-lfp
-lw
-add
-lw
-js
+push 3
 srv
-pop
-pop
 sra
 pop
+sfp
+lrv
+lra
+js
+
+function3:
+cfp
+lra
+push 4
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+function4:
+cfp
+lra
+push 5
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+function5:
+cfp
+lra
+push 6
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+function6:
+cfp
+lra
+push 7
+srv
+sra
+pop
+sfp
+lrv
+lra
+js
+
+function7:
+cfp
+lra
+push 8
+srv
+sra
 pop
 sfp
 lrv

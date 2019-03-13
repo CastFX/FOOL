@@ -62,8 +62,6 @@ public class ClassNode implements Node, DecNode {
         }
         if (superEntry != null) {
             final ClassTypeNode ctnSuper =  (ClassTypeNode) superEntry.getType();
-            final ClassTypeNode ctnSub = (ClassTypeNode) symType;
-
             fields.stream()
             .map(n -> (FieldNode) n)
             .forEach(f -> {
@@ -109,35 +107,41 @@ public class ClassNode implements Node, DecNode {
     @Override
     public String codeGeneration() {
         ArrayList<String> dispatchTable = new ArrayList<>();
-        if (superEntry != null) {
+        
+        if (superEntry != null) { //Se la classe estende un'altra, aggiungo tutte le altre
             dispatchTable.addAll(FOOLlib.getDispatchTables().get(-superEntry.getOffset() - 2));
         }
+        //Aggiungo la dispatchTable alla lista di tutte le dispatchTable di tutte le classi
         FOOLlib.getDispatchTables().add(dispatchTable);
+        int dispatchTableSize = dispatchTable.size();
+        //Scorro i metodi figli
         for (Node m : methods) {
             m.codeGeneration();
             int offset = ((MethodNode)m).getOffset();
             String label = ((MethodNode)m).getLabel();
-            if (offset >= dispatchTable.size()) {
-                dispatchTable.add(offset, label);
-            } else {
+            
+            //Controllo se è un metodo che fa override guardando se l'offset settato è tra quelli ereditati
+            if (offset >= dispatchTableSize) { //Se offset è maggiore non sta facendo override quindi lo aggiungo all'offset specificato
+            	dispatchTable.add(offset, label);
+            } else { //Se offset è minore devo anche sostituire la vecchia label di metodo su cui viene fatto l'override
                 dispatchTable.set(offset, label);
             }
         }
         
-        //DispatchTable Create ok
+        //Codice per incrementare heap pointer
         String incrementHP = "push 1\n" + "lhp\n" + "add\n" + "shp\n";
+        
+        //Codice per salvare tutti gli indirizzi di tutti i metodi della classe nell'heap.
+        //Il primo indirizzo di metodo verrà scritto ad indirizzo che diventerà il DispatchPointer della classe
         String memLabelInHP = "";
-        for (String l : dispatchTable) {
-            memLabelInHP += "push " +  l + "\n" 
-                    + "lhp\n"
-                    + "sw\n"
-                    + incrementHP;
+        for (String label : dispatchTable) {
+            memLabelInHP += "push " +  label + "\n" //Carico l'indirizzo del metodo sullo stack
+                    + "lhp\n" //Setto l'indirizzo ad heap pointer attuale
+                    + "sw\n" //Scrivo nello heap l'indirizzo del metodo
+                    + incrementHP; //Incremento heap pointer
         }
-        //System.out.println("memLabel\n" + memLabelInHP);
-        return  "\n/*ClassNode: " + id + "*/\n" +
-                "lhp\n" +
-                memLabelInHP
-                ;
+        return  "lhp\n" + memLabelInHP; //Prima carico il Dispatch Pointer della classe nell'heap
+        								//Poi alloco gli indirizzi dei metodi nello heap
     }
 
     @Override

@@ -17,15 +17,15 @@ public class RefTypeNode implements Node {
         return indent + "RefTypeNode:" + id + "\n";
     }
 
+    //Non usato
     @Override
     public Node typeCheck() {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    //Non usato
     @Override
     public String codeGeneration() {
-        // TODO Auto-generated method stub
         return null;
     }
 

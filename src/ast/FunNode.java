@@ -93,8 +93,7 @@ public class FunNode implements Node, DecNode {
   	  	}
         
         String funl = FOOLlib.freshFunLabel();
-        FOOLlib.putCode("/*FunNode: " + id + "*/\n" +
-                funl + ":\n" + 
+        FOOLlib.putCode(funl + ":\n" + 
                 "cfp\n" + // setta $fp a $sp
                 "lra\n" + // inserisce return address
                 declCode + // inresisce dichiarazioni locali
