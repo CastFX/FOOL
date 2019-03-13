@@ -136,12 +136,15 @@ cllist returns [ArrayList<Node> astlist]
 		ArrayList<Node> parTypes = new ArrayList<Node>();
 		int paroffset = 1; }
     ( fid=ID COLON fht=hotype { 
-    	// MODIFICA HIGH ORDER???
+    	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
+		// funzionale) occupa un offset doppio:
+		if ($fht.ast instanceof ArrowTypeNode) { paroffset++; }
 		parTypes.add($fht.ast);
 		m.addPar(new ParNode($fid.text,$fht.ast));
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $fid.text, nestingLevel, $fht.ast, paroffset++, $fid.line);}
 	( COMMA id=ID COLON ht=hotype {
-		// MODIFICA HIGH ORDER???
+		// HIGH ORDER
+		if ($ht.ast instanceof ArrowTypeNode) { paroffset++; }
 		parTypes.add($ht.ast);
 		m.addPar(new ParNode($id.text,$ht.ast));
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $id.text, nestingLevel, $ht.ast, paroffset++, $id.line);}

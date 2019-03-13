@@ -7,7 +7,6 @@ push 1
 lhp
 add
 shp
-lhp
 push function1
 lhp
 sw
@@ -15,126 +14,44 @@ push 1
 lhp
 add
 shp
-lhp
+
+lfp
 push function2
-lhp
-sw
-push 1
-lhp
-add
-shp
-lhp
+lfp
 push function3
-lhp
-sw
-push 1
-lhp
-add
-shp
-lhp
+lfp
 push function4
-lhp
-sw
-push 1
-lhp
-add
-shp
-lhp
-push function5
-lhp
-sw
-push 1
-lhp
-add
-shp
-lhp
-push function6
-lhp
-sw
-push 1
-lhp
-add
-shp
-lhp
-push function7
-lhp
-sw
-push 1
-lhp
-add
-shp
-
-push 9998
-lw
-lhp
-sw
-lhp
-push 1
-lhp
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp
-push 1
-lhp
-add
-shp
-push 9993
-lw
-lhp
-sw
-lhp
-push 1
-lhp
-add
-shp
-push 9994
-lw
-lhp
-sw
-lhp
-push 1
-lhp
-add
-shp
-push 9992
-lw
-lhp
-sw
-lhp
-push 1
-lhp
-add
-shp
-push 1
-push 1
-beq label0
-push -14
-lfp
-add
-lw
-b label1
-label0: 
-push -13
-lfp
-add
-lw
-label1: 
+push -1
 
 lfp
+push -5
 lfp
-push -15
+add
+lw
+push -6
+lfp
 add
 lw
 lfp
-push -15
+push -9
+lfp
 add
 lw
+push -7
+lfp
+add
 lw
-push 0
+push -8
+lfp
+add
+lw
+js
+push -3
+lfp
+add
+lw
+push -4
+lfp
 add
 lw
 js
@@ -144,7 +61,11 @@ halt
 function0:
 cfp
 lra
-push 1
+push -1
+lfp
+lw
+add
+lw
 srv
 sra
 pop
@@ -156,7 +77,11 @@ js
 function1:
 cfp
 lra
-push 2
+push -2
+lfp
+lw
+add
+lw
 srv
 sra
 pop
@@ -168,9 +93,58 @@ js
 function2:
 cfp
 lra
+lfp
+push 1
+lfp
+add
+lw
 push 3
+lfp
+add
+lw
+push 2
+lfp
+add
+lw
+js
+push 1
+beq label0
+lfp
+lfp
+push 1
+add
+lw
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+b label1
+label0: 
+lfp
+lfp
+push 1
+add
+lw
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+label1: 
 srv
 sra
+pop
+pop
+pop
 pop
 sfp
 lrv
@@ -180,9 +154,50 @@ js
 function3:
 cfp
 lra
-push 4
+lfp
+lfp
+push 1
+add
+lw
+lfp
+push 1
+add
+lw
+lw
+push 0
+add
+lw
+js
+lfp
+lfp
+push 1
+add
+lw
+lfp
+push 1
+add
+lw
+lw
+push 1
+add
+lw
+js
+beq label4
+push 0
+b label5
+label4: 
+push 1
+label5: 
+push 1
+beq label2
+push 0
+b label3
+label2: 
+push 1
+label3: 
 srv
 sra
+pop
 pop
 sfp
 lrv
@@ -192,45 +207,52 @@ js
 function4:
 cfp
 lra
-push 5
+push 1
+lfp
+add
+lw
+push -1
+beq label8
+push 0
+b label9
+label8: 
+push 1
+label9: 
+push 1
+beq label6
+push 1
+lfp
+add
+lw
+b label7
+label6: 
+push 1
+push 1
+lhp
+sw
+push 1
+lhp
+add
+shp
+lhp
+sw
+push 1
+lhp
+add
+shp
+push 998
+lw
+lhp
+sw
+lhp
+push 1
+lhp
+add
+shp
+label7: 
 srv
 sra
 pop
-sfp
-lrv
-lra
-js
-
-function5:
-cfp
-lra
-push 6
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-function6:
-cfp
-lra
-push 7
-srv
-sra
-pop
-sfp
-lrv
-lra
-js
-
-function7:
-cfp
-lra
-push 8
-srv
-sra
 pop
 sfp
 lrv

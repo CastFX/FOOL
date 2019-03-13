@@ -13,7 +13,7 @@ public class FOOLlib {
     private static int labCount = 0;
     private static int funLabCount = 0;
     private static String funCode = "";
-    public static final int MEMSIZE = 10000;
+    public static final int MEMSIZE = 1000;
     
     public static ArrayList<ArrayList<String>> getDispatchTables() {
         return dispatchTables;
@@ -26,32 +26,6 @@ public class FOOLlib {
     // valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base:
     // int o bool
     public static boolean isSubtype(Node a, Node b) {
-    	
-    	//HIGH ORDER
-    	if ((a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode)) {
-			// Both are ArrowTypeNode
-			// Check if same number of parameters
-			ArrowTypeNode arrowA = (ArrowTypeNode) a;
-			ArrowTypeNode arrowB = (ArrowTypeNode) b;
-			if (arrowA.getParList().size() == arrowB.getParList().size()) {
-				// Same number of parameters
-				// TODO Check covariance ( Return type of a is subtype of b, T’<=T )
-				if (!isSubtype(arrowA.getRet(), arrowB.getRet())) {
-					return false;
-				}
-				// TODO Check anti-covariance ( Input parameters type of b is subtype of a, T_i <= T'_i)
-				for (int i = 0; i < arrowA.getParList().size() - 1; i++) {
-					if (!isSubtype(arrowB.getParList().get(i), arrowA.getParList().get(i))){
-						return false;
-					}
-				}
-				// Both covariance and anti-covariance are respected
-				return true;
-			} else {
-				return false;
-			}
-    	}
-
         return  ((a instanceof BoolTypeNode) && (b instanceof BoolTypeNode))
                 || ((a instanceof IntTypeNode) && (b instanceof IntTypeNode))
                 || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode))
@@ -124,7 +98,7 @@ public class FOOLlib {
 				Node covariance = lowestCommonAncestor(arrowA.getRet(), arrowB.getRet());
 				ArrayList<Node> paramList = new ArrayList<>();
 				if ( covariance != null) {
-					for (int i = 0; i < arrowA.getParList().size() - 1; i++) {
+					for (int i = 0; i < arrowA.getParList().size(); i++) {
 						if (isSubtype(arrowA.getParList().get(i), arrowB.getParList().get(i))){
 							paramList.add(arrowA.getParList().get(i));
 						} else {
@@ -143,7 +117,7 @@ public class FOOLlib {
     }
 
     private static boolean isArrowSubtype(ArrowTypeNode a, ArrowTypeNode b) {
-        if (!isSubtype(a.getRet().typeCheck(), b.getRet().typeCheck())) {
+        if (!isSubtype(a.getRet(), b.getRet())) {
             System.out.println("return type of arrowtype " + a + " not subtype of ");
             return false;
         }
@@ -154,8 +128,8 @@ public class FOOLlib {
             return false;
         }
         for (int i  = 0; i < aPars.size(); i++) {
-            if (!isSubtype(bPars.get(i).typeCheck(), aPars.get(i).typeCheck())) {
-                System.out.println("Param from arrowSuperType " + b + " at index " + i + "not subtype of arrowTypeSub " + a);
+            if (!isSubtype(bPars.get(i), aPars.get(i))) {
+                System.out.println("Param from arrowSuperType " + b + " at index " + i + " not subtype of arrowTypeSub " + a);
                 return false;
             }
         }
