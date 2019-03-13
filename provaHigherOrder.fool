@@ -1,0 +1,89 @@
+let
+	fun g:int(x:(int,int)->int)
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+
+/* Serbatoio Esempi
+
+//LINSUM (WORKS)
+let
+	fun g:int(x:(int,int)->int)
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+-------------------------------------------
+
+//LINSUM BUT INSTEAD OF INT I RETURN A SUBTYPE OF INT TO CHECK COVARIANCE. OK
+let
+	fun g:int(x:(int,int)->int) /*Request a Int in return*/
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				true; /*Return a boolean that is subtype of Int*/
+		in
+			g(linsum);
+in
+print(f(2));
+-------------------------------------------
+
+//LINSUM BUT TRYING TO PASS WRONG PARAMETERS THAT ARE NOT SUBTYPES (Anti-Covariance not respected), SHOULD NOT WORK. OK
+let
+	fun g:int(x:(int,int)->int) /*Request int parameters*/
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:bool,b:bool) /*Gives boolean parameters, wrong*/
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+--------------------------------------------
+
+//LINSUM BUT USING SUBTYPES IN PARAMETERS TO CHECK ANTI-COVARIACE. OK
+let
+	fun g:int(x:(bool,bool)->int)
+		x(true,true);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+-------------------------------------------
+
+//LINSUM BUT TRYING TO PASS WRONG RETURN TYPES THAT ARE NOT SUBTYPES (Covariance not respected), SHOULD NOT WORK. OK
+let
+	fun g:bool(x:(int,int)->bool) /*returns a boolean*/
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int) /*Returns a int, that is not subtype of Boolean*/
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+-------------------------------------------
+
+*/
