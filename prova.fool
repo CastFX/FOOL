@@ -1,4 +1,17 @@
 let
+	fun g:int(x:(int,int)->int)
+		x(5,7);
+	fun f:int(c:int)
+		let
+			fun linsum:int(a:int,b:int)
+				(a+b)*c;
+		in
+			g(linsum);
+in
+print(f(2));
+
+/* SERBATOIO ESEMPI
+let
 
   class List (f:int, r:List) {
     fun first:int() f;
@@ -52,7 +65,6 @@ let
 in printList(quicksort(l,inc));
 
 
-/* SERBATOIO ESEMPI
 
 //Higher Order ( WORKS )
 let
@@ -106,17 +118,20 @@ in print(if (myLoan==null) then {0} else {myLoan.getMon()});
 
 
 ---------------------------
+//WORKS
 let 
   var x:int = 1;
   var b:bool = true;
 in
   print (if (b) then { x+1 } else { x+2 });
 ---------------
+//WORKS
 let 
   fun f:int (i:int, j:int) i+j;
 in
   print (f(3,5));
 ----------------
+//WORKS
 let
   var y:int = 5+2;
   fun f:bool (n:int, m:int)
@@ -130,7 +145,7 @@ in
       else { 10 }
   ); 
 -----------------
-
+//WORKS
 let
 	fun g:int(x:(int,int)->int)
 		x(5,7);
