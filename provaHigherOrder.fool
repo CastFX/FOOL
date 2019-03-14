@@ -1,15 +1,20 @@
 let
+	class A (x:int, y:int) {
+		fun getX:int() x;
+  		fun getY:int() y;
+  	}
+	
 	fun g:int(x:(int,int)->int)
 		x(5,7);
-	fun f:int(c:int)
-		let
-			fun linsum:int(a:int,b:int)
-				(a+b)*c;
-		in
-			g(linsum);
-in
-print(f(2));
+	fun linsum:int(a:int,b:int)
+		(a+b);
 
+	var a:A = new A(2,3);
+in
+print(if false 
+	  then{g(linsum)}
+	  else{linsum(3,4)}
+	  );
 
 /* Serbatoio Esempi
 
@@ -85,5 +90,7 @@ in
 print(f(2));
 
 -------------------------------------------
+
+
 
 */
