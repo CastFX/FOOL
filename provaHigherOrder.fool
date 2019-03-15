@@ -90,7 +90,53 @@ in
 print(f(2));
 
 -------------------------------------------
+//Invalide use of functional types on equals. SHOULD NOT WORK. OK.
+let	
+	fun f:int(x:(int,int)->int, y:int) 
+		x(2,3)+y;
+	fun g:int(a:int, b:int) a+b;
+in
+	f==g;
 
-
-
+-------------------------------------------
+//Invocation of a non-function a. SHOULD NOT WORK. OK.
+let	
+	fun f:int(x:(int,int)->int, y:int) 
+		x(2,3)+y;
+	fun g:int(a:int, b:int) a+b;
+	var a:int = 3;
+in
+print(a());
+------------------------------------------
+//Incompatible types in then-else branches. SHOULD NOT WORK. OK.
+let
+	class A() {}
+	class B() {}
+	fun f:int(x:(int, A)->int) 3;
+	fun g:int(y:(int, B)->int) 4;
+in
+	print(
+		if true
+	  		then{f}
+	  		else{g}
+	);
+--------------------------------------------
+//Types with extends. OK.
+let
+	class A() {}
+	class B extends A() {}
+	class D extends B() {}
+	class C extends D() {}
+	class E extends C() {}
+	
+	fun f:int(x:(int, A)->int) 3;
+	fun g:int(y:(int, E)->int) 4;
+	
+	
+in
+	print(
+		if true
+	  		then{f}
+	  		else{g}
+	);
 */
