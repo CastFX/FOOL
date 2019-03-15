@@ -17,19 +17,17 @@ public class EqualNode implements Node {
     }
 
     public Node typeCheck() {
-    	
-    	//HIGH ORDER
-    	if (left instanceof ArrowTypeNode){ 
-    		System.out.println("Invalid use of functional types "+left+" in left side of equal");
-    	    System.exit(0);
-    	}
-    	if (right instanceof ArrowTypeNode){
-    		System.out.println("Invalid use of functional types "+right+" in right side of equal");
-    	    System.exit(0);
-    	}
-    	
         Node l = left.typeCheck();
         Node r = right.typeCheck();
+    	//HIGH ORDER
+    	if (l instanceof ArrowTypeNode){ 
+    		System.out.println("Invalid use of functional types "+l+" in left side of equal");
+    	    System.exit(0);
+    	}
+    	if (r instanceof ArrowTypeNode){
+    		System.out.println("Invalid use of functional types "+r+" in right side of equal");
+    	    System.exit(0);
+    	}
         if (!(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l))) {
             System.out.println("Incompatible types in equal");
             System.exit(0);
