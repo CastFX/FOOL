@@ -1,10 +1,6 @@
 package ast;
 
-import java.lang.invoke.MethodHandleProxies;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 import lib.FOOLlib;
 
@@ -74,17 +70,16 @@ public class ClassNode implements Node, DecNode {
                 }
             });
         
-        methods.stream()
-            .map(n -> (MethodNode) n)
-            .forEach(m -> {
-                int methodPosition = m.getOffset();
-                if (methodPosition < ctnSuper.getAllMethods().size() &&
+            methods.stream()
+            	.map(n -> (MethodNode) n)
+            	.forEach(m -> {
+            		int methodPosition = m.getOffset();
+            		if (methodPosition < ctnSuper.getAllMethods().size() &&
                         !FOOLlib.isSubtype(m.getSymType(), ctnSuper.getAllMethods().get(methodPosition))) {
-                    System.out.println("Method of type " + methods.indexOf(m) + " of class " + id 
+            			System.out.println("Method of type " + methods.indexOf(m) + " of class " + id 
                             + " not subtype of overridden method from superclass");
-                    System.exit(0);
-                }
-            });
+            			System.exit(0);
+            		}});
         }
 //        for (int i = 0; i < ctnSuper.getAllFields().size(); i++) {
 //            if (!FOOLlib.isSubtype(ctnSuper.getAllFields().get(i).typeCheck()

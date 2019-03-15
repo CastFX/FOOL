@@ -21,7 +21,7 @@ public final class FOOLParsingLib {
     
     private static void ensureNotOverriddenInSameClass(HashSet<String> names, String id, int line, String type) {
         if (names.contains(id)) {
-            fail(String.format("Cannot override {0} {1} at line {2}", type, id, line));
+            fail("Cannot override " + type + " " + id + " at line " + line);
         }
         names.add(id);
     }
