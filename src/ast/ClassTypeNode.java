@@ -66,7 +66,7 @@ public class ClassTypeNode implements Node {
         return ctn;
     }
     
-    public Node deepCopyType(Node type) {
+    private Node deepCopyType(Node type) {
         if (type instanceof IntTypeNode) {
             return new IntTypeNode();
         }

@@ -44,7 +44,6 @@ public class MethodNode implements Node, DecNode {
         for (Node dec : declist) {
             declstr += dec.toPrint(indent + "  ");
         }
-        ;
         return indent 
                 + "Method:" + id + "\n" 
                 + type.toPrint(indent + "  ") 

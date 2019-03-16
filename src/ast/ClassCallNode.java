@@ -41,10 +41,13 @@ public class ClassCallNode implements Node {
             System.exit(0);
         }
         ArrayList<Node> p = t.getParList();
+        
+        //Controllo il corretto numero di parametri
         if (!(p.size() == parlist.size())) {
             System.out.println("Wrong number of parameters in the invocation of " + id);
             System.exit(0);
         }
+        //Poi controllo che ogni parametro passato alla chiamata sia sottotipo di quello richiesto
         for (int i = 0; i < parlist.size(); i++)
             if (!(FOOLlib.isSubtype((parlist.get(i)).typeCheck(), p.get(i)))) {
                 System.out.println("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + id);

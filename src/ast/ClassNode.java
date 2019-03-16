@@ -40,36 +40,40 @@ public class ClassNode implements Node, DecNode {
         }
         return indent + "Class:" + id
             + (superEntry != null ? (" extends:" + superId + "\n" + superEntry.getType().toPrint(indent + "  ext:")) :  "\n")
-            //+ symType.toPrint(indent + "  ")
-            
             + fieldlstr
             + methlstr;
     }
 
     @Override
     public Node typeCheck() {
+    	//Typecheck per ogni figlio metodo
         for (Node m : methods) {
             m.typeCheck();
         }
+        //Controllo il corretto tipo di symType e eventualmente il tipo della superclasse
         if (!(symType instanceof ClassTypeNode) ||
             superEntry != null && !(superEntry.getType() instanceof ClassTypeNode)) {
             System.out.println("either symType or superEntry of ClassNode not of ClassTypeNode");
             System.exit(0);
         }
+        
+        //Dopo aver fatto il typecheck di tutti i figli singolarmente, bisogna controllare che quelli che fanno override
+        //siano sottotipi di quelli specificati dalla superclasse
         if (superEntry != null) {
             final ClassTypeNode ctnSuper =  (ClassTypeNode) superEntry.getType();
             fields.stream()
-            .map(n -> (FieldNode) n)
+            .map(n -> (FieldNode) n) //per ogni FieldNode
             .forEach(f -> {
-                int fieldPosition = -f.getOffset() - 1;
-                if (fieldPosition < ctnSuper.getAllFields().size() &&
-                        !FOOLlib.isSubtype(f.getSymType(), ctnSuper.getAllFields().get(fieldPosition))) { //Overriding
+                int fieldPosition = -f.getOffset() - 1; 
+                if (fieldPosition < ctnSuper.getAllFields().size() && //Se l'offset è uguale ad uno di quelli della superclasse 
+                        !FOOLlib.isSubtype(f.getSymType(), ctnSuper.getAllFields().get(fieldPosition))) { //Typecheck per override corretto
                     System.out.println("Field type " + fields.indexOf(f) + " of class " + id 
                             + " not subtype of overridden method from superclass");
                     System.exit(0);
                 }
             });
         
+            //Stesso per i metodi
             methods.stream()
             	.map(n -> (MethodNode) n)
             	.forEach(m -> {
@@ -81,21 +85,6 @@ public class ClassNode implements Node, DecNode {
             			System.exit(0);
             		}});
         }
-//        for (int i = 0; i < ctnSuper.getAllFields().size(); i++) {
-//            if (!FOOLlib.isSubtype(ctnSuper.getAllFields().get(i).typeCheck()
-//                    , ctnSub.getAllFields().get(i).typeCheck())) {
-//                System.out.println("field type" + i + " of superclass not subtype of current");
-//                System.exit(0);
-//            }
-//        }
-//        
-//        for (int i = 0; i < ctnSuper.getAllMethods().size(); i++) {
-//            if (!FOOLlib.isSubtype(ctnSuper.getAllMethods().get(i).typeCheck()
-//                    , ctnSub.getAllMethods().get(i).typeCheck())) {
-//                System.out.println("method type" + i + " of superclass not subtype of current");
-//                System.exit(0);
-//            }
-//        }
         return symType;
     }
 
@@ -104,7 +93,7 @@ public class ClassNode implements Node, DecNode {
         ArrayList<String> dispatchTable = new ArrayList<>();
         
         if (superEntry != null) { //Se la classe estende un'altra, aggiungo tutte le altre
-            dispatchTable.addAll(FOOLlib.getDispatchTables().get(-superEntry.getOffset() - 2));
+            dispatchTable.addAll(FOOLlib.getDispatchTables().get(-superEntry.getOffset() - 2)); //-2 perchè le classi partono da offset 0 a nesting level 0
         }
         //Aggiungo la dispatchTable alla lista di tutte le dispatchTable di tutte le classi
         FOOLlib.getDispatchTables().add(dispatchTable);

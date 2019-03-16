@@ -1,9 +1,5 @@
 let  
-  class A() {
-  }
-  var zz:int = 3- -5;
-  var z:int = 3-5;
-  fun x:int() 5;
-  var a:A = new A();
+  class A() {}
+  var xxx:A = if (true) then {2} else {new A()};
 in
-  print(z);  	
+  print(xxx);  	
