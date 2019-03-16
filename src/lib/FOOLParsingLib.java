@@ -9,6 +9,10 @@ import ast.Node;
 import ast.RefTypeNode;
 import ast.STentry;
 
+/*
+ * Class helper per gestire stampe di errore durante il parsing
+ * E ridurre il codice presente in FOOL.g4
+ */
 public final class FOOLParsingLib {
 
     public static void ensureMethodNotOverridden(HashSet<String> names, String id, int line) {

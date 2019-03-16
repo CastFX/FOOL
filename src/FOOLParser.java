@@ -294,15 +294,17 @@ public class FOOLParser extends Parser {
 				setState(47); match(CLASS);
 				setState(48); ((CllistContext)_localctx).i = match(ID);
 
+						//Creo nuovo ClassTypeNode,VirtualTable e set di nomi (per non permettere override field/metodi nella classe)
 						ClassTypeNode ctn = new ClassTypeNode(new ArrayList<Node>(), new ArrayList<Node>());
 				        HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
 						HashSet<String> names = new HashSet<String>();
 						STentry superEntry = null;
 						String superId = null;
-				        STentry entry = new STentry(0, ctn, offset_0--);
+				        STentry entry = new STentry(0, ctn, offset_0--); //Creo la STentry decrementando l'offset del nestingLevel 0
 						FOOLParsingLib.addClassToSymTable(symTable.get(0), (((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), entry, (((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getLine():0));
 				        //NestingLevel = 1 Dentro la classe
 				        nestingLevel++;
+				        //Infine aggiungo la virtualTable alla symTable (a nestingLevel 1) e alla classTable con il suo id
 				        symTable.add(virtualTable);
 				        classTable.put((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), virtualTable);
 				setState(53);
@@ -312,6 +314,7 @@ public class FOOLParser extends Parser {
 					setState(50); match(EXTENDS);
 					setState(51); ((CllistContext)_localctx).i2 = match(ID);
 
+							//Se estende una classe, controllo che esista, dopodiché aggiungo alla virtualTable i metodi/campi ereditati
 							superId = (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null);
 							FOOLParsingLib.ensureExtendedClassExists(symTable.get(0), (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null), (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getLine():0));
 							HashMap<String, STentry> extVirtualTable = classTable.get((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null));
@@ -321,6 +324,7 @@ public class FOOLParser extends Parser {
 							superEntry = symTable.get(0).get((((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null)); 
 							FOOLParsingLib.ensureExtendedSTentryType(superEntry, (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getText():null), (((CllistContext)_localctx).i2!=null?((CllistContext)_localctx).i2.getLine():0));
 							ClassTypeNode superCtn = (ClassTypeNode) superEntry.getType();
+							//Aggiungo tutti i tipi dei metodi e dei campi alla ClassTypeNode della sottoclasse
 							ArrayList<Node> fieldTypes = superCtn.getAllFields();
 							for (int i = 0; i < fieldTypes.size(); i++) {
 								ctn.insertFieldType(fieldTypes.get(i),i);	
@@ -333,11 +337,14 @@ public class FOOLParser extends Parser {
 				}
 
 
+						//Infine aggiungo la classe alla mappa di sottoclasse-superclasse, se non eredita mappata a null. 
+						//E la aggiungo alla lista di dichiarazioni delle classi
 						FOOLlib.getSuperTypeMap().put((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), superId);
 						ClassNode c = new ClassNode((((CllistContext)_localctx).i!=null?((CllistContext)_localctx).i.getText():null), ctn, superId, superEntry);
 						_localctx.astlist.add(c);
 				setState(56); match(LPAR);
 
+						//L'offset dei campi normalmente decresce da -1, se è una sottoclasse, parte deccresce dopo gli altri offset ereditati
 				    	int fieldOffset = -ctn.getAllFields().size() - 1; 
 				setState(73);
 				_la = _input.LA(1);
@@ -350,15 +357,17 @@ public class FOOLParser extends Parser {
 					    	int thisFieldOffset = 0;
 							FOOLParsingLib.ensureFieldNotOverridden(names, (((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getText():null), (((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getLine():0));
 							STentry oldSTentry = virtualTable.get((((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getText():null));
-						    if (oldSTentry != null) { //Enable Field Override
+						    if (oldSTentry != null) { //Permetto override del campo se non è già il nome di un metodo
 						    	FOOLParsingLib.ensureFieldSTEntryNotMethod(oldSTentry, (((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getText():null), (((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getLine():0));
-						    	thisFieldOffset = oldSTentry.getOffset();
+						    	thisFieldOffset = oldSTentry.getOffset(); //Se override, l'offset è quello della superclasse
 						    } else {
-						    	thisFieldOffset = fieldOffset--;
+						    	thisFieldOffset = fieldOffset--; //Senno decresce dall'ultimo offset dichiarato
 						    }
+					    	//Infine lo aggiungo come campo alla classe, come tipo alla ClassType e poi lo aggiungo alla virtualTable
 					    	FieldNode field = new FieldNode((((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getText():null), ((CllistContext)_localctx).fty.ast, thisFieldOffset);
 					    	c.addField(field);
 					    	ctn.insertFieldType(((CllistContext)_localctx).fty.ast, -thisFieldOffset - 1);
+					    	//Infine lo aggiungo come campo alla classe, come tipo alla ClassType e poi lo aggiungo alla virtualTable
 					    	virtualTable.put((((CllistContext)_localctx).fid!=null?((CllistContext)_localctx).fid.getText():null), new STentry(nestingLevel, ((CllistContext)_localctx).fty.ast, thisFieldOffset));
 					setState(70);
 					_errHandler.sync(this);
@@ -371,6 +380,7 @@ public class FOOLParser extends Parser {
 						setState(64); match(COLON);
 						setState(65); ((CllistContext)_localctx).ty = type();
 
+								//Come sopra, ma per i campi dal secondo in poi
 								FOOLParsingLib.ensureFieldNotOverridden(names, (((CllistContext)_localctx).id!=null?((CllistContext)_localctx).id.getText():null), (((CllistContext)_localctx).id!=null?((CllistContext)_localctx).id.getLine():0));
 								oldSTentry = virtualTable.get((((CllistContext)_localctx).id!=null?((CllistContext)_localctx).id.getText():null));
 							    if (oldSTentry != null) { //Enable Field Override
@@ -395,7 +405,10 @@ public class FOOLParser extends Parser {
 				setState(75); match(RPAR);
 
 				setState(77); match(CLPAR);
-				 int methodOffset = ctn.getAllMethods().size(); 
+				 //Gli offset dei metodi normalmente partono da 0 e salgono
+						//Se la classe estende, come per i campi, si parte dall'ultimo offset della superclasse
+						int methodOffset = ctn.getAllMethods().size();
+					
 				setState(130);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
@@ -476,6 +489,7 @@ public class FOOLParser extends Parser {
 						{
 						setState(105); match(LET);
 
+								//La declist di un metodo può avere un solo livello (a differenza dei possibili livelli infiti delle funzioni)
 								ArrayList<Node> declist = new ArrayList<Node>();
 								int fOffset = -2;
 								m.addDec(declist);
@@ -1478,6 +1492,7 @@ public class FOOLParser extends Parser {
 					setState(367); ((ValueContext)_localctx).mi = match(ID);
 					setState(368); match(LPAR);
 
+							//Se dopo aver matchato un ID c'è anche una chiamata a metodo (id.metodo())
 							ArrayList<Node> parlist = new ArrayList<>();
 							FOOLParsingLib.ensureIDIsRefTypeNode(entry, (((ValueContext)_localctx).i!=null?((ValueContext)_localctx).i.getText():null), (((ValueContext)_localctx).mi!=null?((ValueContext)_localctx).mi.getLine():0));
 							RefTypeNode rtn = (RefTypeNode) entry.getType();

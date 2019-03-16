@@ -47,18 +47,21 @@ prog returns [Node ast]
 cllist returns [ArrayList<Node> astlist]      
 	: {$astlist = new ArrayList<Node>();}
 	( CLASS i=ID {
+		//Creo nuovo ClassTypeNode,VirtualTable e set di nomi (per non permettere override field/metodi nella classe)
 		ClassTypeNode ctn = new ClassTypeNode(new ArrayList<Node>(), new ArrayList<Node>());
         HashMap<String,STentry> virtualTable = new HashMap<String,STentry> ();
 		HashSet<String> names = new HashSet<String>();
 		STentry superEntry = null;
 		String superId = null;
-        STentry entry = new STentry(0, ctn, offset_0--);
+        STentry entry = new STentry(0, ctn, offset_0--); //Creo la STentry decrementando l'offset del nestingLevel 0
 		FOOLParsingLib.addClassToSymTable(symTable.get(0), $i.text, entry, $i.line);
         //NestingLevel = 1 Dentro la classe
         nestingLevel++;
+        //Infine aggiungo la virtualTable alla symTable (a nestingLevel 1) e alla classTable con il suo id
         symTable.add(virtualTable);
         classTable.put($i.text, virtualTable);}
 	(EXTENDS i2=ID {
+		//Se estende una classe, controllo che esista, dopodiché aggiungo alla virtualTable i metodi/campi ereditati
 		superId = $i2.text;
 		FOOLParsingLib.ensureExtendedClassExists(symTable.get(0), $i2.text, $i2.line);
 		HashMap<String, STentry> extVirtualTable = classTable.get($i2.text);
@@ -68,6 +71,7 @@ cllist returns [ArrayList<Node> astlist]
 		superEntry = symTable.get(0).get($i2.text); 
 		FOOLParsingLib.ensureExtendedSTentryType(superEntry, $i2.text, $i2.line);
 		ClassTypeNode superCtn = (ClassTypeNode) superEntry.getType();
+		//Aggiungo tutti i tipi dei metodi e dei campi alla ClassTypeNode della sottoclasse
 		ArrayList<Node> fieldTypes = superCtn.getAllFields();
 		for (int i = 0; i < fieldTypes.size(); i++) {
 			ctn.insertFieldType(fieldTypes.get(i),i);	
@@ -77,26 +81,32 @@ cllist returns [ArrayList<Node> astlist]
 			ctn.insertMethodType(methodTypes.get(i),i);	
 		}}
 	)? {
+		//Infine aggiungo la classe alla mappa di sottoclasse-superclasse, se non eredita mappata a null. 
+		//E la aggiungo alla lista di dichiarazioni delle classi
 		FOOLlib.getSuperTypeMap().put($i.text, superId);
 		ClassNode c = new ClassNode($i.text, ctn, superId, superEntry);
 		$astlist.add(c);}
 	LPAR {
+		//L'offset dei campi normalmente decresce da -1, se è una sottoclasse, parte deccresce dopo gli altri offset ereditati
     	int fieldOffset = -ctn.getAllFields().size() - 1; } 
 	( fid=ID COLON fty=type {
     	int thisFieldOffset = 0;
 		FOOLParsingLib.ensureFieldNotOverridden(names, $fid.text, $fid.line);
 		STentry oldSTentry = virtualTable.get($fid.text);
-	    if (oldSTentry != null) { //Enable Field Override
+	    if (oldSTentry != null) { //Permetto override del campo se non è già il nome di un metodo
 	    	FOOLParsingLib.ensureFieldSTEntryNotMethod(oldSTentry, $fid.text, $fid.line);
-	    	thisFieldOffset = oldSTentry.getOffset();
+	    	thisFieldOffset = oldSTentry.getOffset(); //Se override, l'offset è quello della superclasse
 	    } else {
-	    	thisFieldOffset = fieldOffset--;
+	    	thisFieldOffset = fieldOffset--; //Senno decresce dall'ultimo offset dichiarato
 	    }
+    	//Infine lo aggiungo come campo alla classe, come tipo alla ClassType e poi lo aggiungo alla virtualTable
     	FieldNode field = new FieldNode($fid.text, $fty.ast, thisFieldOffset);
     	c.addField(field);
     	ctn.insertFieldType($fty.ast, -thisFieldOffset - 1);
+    	//Infine lo aggiungo come campo alla classe, come tipo alla ClassType e poi lo aggiungo alla virtualTable
     	virtualTable.put($fid.text, new STentry(nestingLevel, $fty.ast, thisFieldOffset));}
 	( COMMA id=ID COLON ty=type {
+		//Come sopra, ma per i campi dal secondo in poi
 		FOOLParsingLib.ensureFieldNotOverridden(names, $id.text, $id.line);
 		oldSTentry = virtualTable.get($id.text);
 	    if (oldSTentry != null) { //Enable Field Override
@@ -112,7 +122,10 @@ cllist returns [ArrayList<Node> astlist]
 	)*
 	)? 
 	RPAR {}
-	CLPAR { int methodOffset = ctn.getAllMethods().size(); }
+	CLPAR { //Gli offset dei metodi normalmente partono da 0 e salgono
+		//Se la classe estende, come per i campi, si parte dall'ultimo offset della superclasse
+		int methodOffset = ctn.getAllMethods().size();
+	}
 	( FUN im=ID COLON tm=type {
 		FOOLParsingLib.ensureMethodNotOverridden(names, $im.text, $im.line);
 		int thisMethodOffset = 0;
@@ -152,6 +165,7 @@ cllist returns [ArrayList<Node> astlist]
     )? 
 	RPAR { newSTentry.addType(new ArrowTypeNode(parTypes,$tm.ast)); }
 	( LET {
+		//La declist di un metodo può avere un solo livello (a differenza dei possibili livelli infiti delle funzioni)
 		ArrayList<Node> declist = new ArrayList<Node>();
 		int fOffset = -2;
 		m.addDec(declist);} 
@@ -347,6 +361,7 @@ value returns [Node ast]
 	)? 
 	RPAR {$ast= new CallNode($i.text,entry,arglist,nestingLevel);} 
 	| DOT mi=ID LPAR {
+		//Se dopo aver matchato un ID c'è anche una chiamata a metodo (id.metodo())
 		ArrayList<Node> parlist = new ArrayList<>();
 		FOOLParsingLib.ensureIDIsRefTypeNode(entry, $i.text, $mi.line);
 		RefTypeNode rtn = (RefTypeNode) entry.getType();
