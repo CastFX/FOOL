@@ -139,4 +139,49 @@ in
 	  		then{f}
 	  		else{g}
 	);
+-------------------------------------------
+//Non integer in lesser equal. SHOULD NOT WORK. OK. (SAME FOR GREATER EQUAL)
+let  
+  class A() {}
+  class B extends A() {}
+  fun f:int() 3;
+  fun g:bool() true;
+  var a:A = new A();
+  var b:B = new B();
+in
+  print(3 <= b);  	
+---------------------------------------------
+//Incompatible types in OR. SHOULD NOT WORK. OK. (SAME FOR AND)
+let  
+  class A() {}
+  class B extends A() {}
+  fun f:int() 3;
+  fun g:bool() true;
+  var a:A = new A();
+  var b:B = new B();
+in
+  print(3 || b);  	
+  
+---------------------------------------------
+//Non integer in sum. SHOULD NOT WORK. OK (SAME FOR MINUS; DIV; MULT)
+let  
+  class A() {}
+  class B extends A() {}
+  fun f:int() 3;
+  fun g:bool() true;
+  var a:A = new A();
+  var b:B = new B();
+in
+  print(g + f);  	
+---------------------------------------------
+//Incompatible types for NOT. SHOULD NOT WORK. OK.
+  let  
+  class A() {}
+  class B extends A() {}
+  fun f:int() 3;
+  fun g:bool() true;
+  var a:A = new A();
+  var b:B = new B();
+in
+  print(!(f));  
 */

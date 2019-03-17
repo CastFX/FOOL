@@ -27,6 +27,7 @@ public class CallNode implements Node {
         return s + "Call:" + id + " at nestinglevel " + nestingLevel + "\n" + entry.toPrint(s + "  ") + parlstr;
     }
 
+    //Il check è invariato, il tipo dell'ID deve essere di tipo funzionale. (Nome di funzione o var/par di tipo funzionale)
     public Node typeCheck() {
         ArrowTypeNode t = null;
         if (entry.getType() instanceof ArrowTypeNode)
@@ -48,12 +49,11 @@ public class CallNode implements Node {
         return t.getRet();
     }
 
-    /**
-     * Controllo se ID è un metodo ("isMethod" in STentry)
-     * Se non lo è, ritorno codice Higher Order
-     * Se lo è, ritorno codice Object Oriented
-     */
+    //Controllo se ID è un metodo ("isMethod" in STentry)
+    //Se lo è, ritorno codice Object Oriented
+    //Se non lo è, ritorno codice Higher Order
     public String codeGeneration() {
+    	//Controllo se ID è un metodo
     	if (this.entry.isMethod()) {
     	    //Ritorno codice Object Oriented
     	    String parCode = "";
@@ -73,6 +73,9 @@ public class CallNode implements Node {
 	        "js\n";                 // effettua il salto
     	}
     	//Ritorno codice Higher Order
+    	//Due cose sono recuperate come valori dall'AR dove è dichiarato l'ID con meccanismo usuale di risalita catena statica.
+    	//1. Indirizzo (fp) ad AR dichiarazione funzione (recuperato a offset ID), usato per settare nuovo Access Link (AL).
+    	//2. Indirizzo della funzione (Recuperato a offset ID - 1), usato per saltare a codice funzione.
     	String parCode="";
   	  	for (int i = parlist.size() - 1; i >= 0; i--) 
   		  parCode += parlist.get(i).codeGeneration();
@@ -81,12 +84,12 @@ public class CallNode implements Node {
       	  getAR += "lw\n";      
         return "lfp\n" + //Control Link
             parCode + //allocazione valori parametri			          		 
-            "push " + (entry.getOffset()) + "\n" +			 
-            "lfp\n" + getAR + //Risalgo la catena statica per ottenere indirizzo dichiarazione funzione (OFFSET ID)
+            "push " + (entry.getOffset()) + "\n" +	 // Push dell'offset ID
+            "lfp\n" + getAR + //Risalgo la catena statica per ottenere indirizzo dichiarazione funzione a offset ID.
             "add\n" +
             "lw\n" + 
-            "push " +(entry.getOffset()-1)+"\n"+
-            "lfp\n" + getAR +  //Risalgo la catena statica per ottenere indirizzo della funzione (OFFSET ID-1)
+            "push " +(entry.getOffset()-1)+"\n"+ //Push dell'offset ID - 1
+            "lfp\n" + getAR +  //Risalgo la catena statica per ottenere indirizzo della funzione a offset ID-1.
             "add\n" +
             "lw\n" +
             "js\n"; //effettua il salto

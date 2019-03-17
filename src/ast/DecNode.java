@@ -2,14 +2,13 @@ package ast;
 
 /**
  * 
- * @author Maicol Interface implemented by VarNode, FunNode, ParNode. ( High
- *         Order Extension )
+ *  Interfaccia che viene implementata da VarNode, FunNode e ParNode. ( Higher Order Extension )
  */
 public interface DecNode {
 
     /**
      * 
-     * @return the type that is in the symbol table.
+     * @return il tipo messo in Symbol table.
      */
     Node getSymType();
 }

@@ -27,11 +27,13 @@ public class VarNode implements Node, DecNode {
         return null;
     }
 
+    //Invariato
     public String codeGeneration() {
     	return exp.codeGeneration();
     }
 
-    //HIGH ORDER
+    //HIGHER ORDER
+    //Ritorna il tipo messo in symbol table.
     @Override
     public Node getSymType() {
         return type;

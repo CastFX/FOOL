@@ -149,14 +149,16 @@ cllist returns [ArrayList<Node> astlist]
 		ArrayList<Node> parTypes = new ArrayList<Node>();
 		int paroffset = 1; }
     ( fid=ID COLON fht=hotype { 
-    	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
-		// funzionale) occupa un offset doppio:
+    	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo funzionale)
+		// occupa un offset doppio:
 		if ($fht.ast instanceof ArrowTypeNode) { paroffset++; }
 		parTypes.add($fht.ast);
 		m.addPar(new ParNode($fid.text,$fht.ast));
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $fid.text, nestingLevel, $fht.ast, paroffset++, $fid.line);}
 	( COMMA id=ID COLON ht=hotype {
-		// HIGH ORDER
+		// HIGHER ORDER
+		// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo funzionale)
+		// occupa un offset doppio:
 		if ($ht.ast instanceof ArrowTypeNode) { paroffset++; }
 		parTypes.add($ht.ast);
 		m.addPar(new ParNode($id.text,$ht.ast));
@@ -165,7 +167,7 @@ cllist returns [ArrayList<Node> astlist]
     )? 
 	RPAR { newSTentry.addType(new ArrowTypeNode(parTypes,$tm.ast)); }
 	( LET {
-		//La declist di un metodo può avere un solo livello (a differenza dei possibili livelli infiti delle funzioni)
+		//La declist di un metodo può avere un solo livello (a differenza dei possibili livelli infiniti delle funzioni)
 		ArrayList<Node> declist = new ArrayList<Node>();
 		int fOffset = -2;
 		m.addDec(declist);} 
@@ -194,11 +196,11 @@ declist returns [ArrayList<Node> astlist]
 		FOOLParsingLib.addVarSTentryToSymbolTable(hm, $i.text, nestingLevel, $ht.ast, 
 			nestingLevel == 0 ? offset_0-- : offset--, $i.line);
 		
-		// HIGH ORDER
+		// HIGHER ORDER
 		if ($ht.ast instanceof ArrowTypeNode) {
-        	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
-			// funzionale) occupa un offset doppio.
-			if (nestingLevel == 0) {
+        	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo funzionale) 
+			// occupa un offset doppio.
+			if (nestingLevel == 0) { //In base al nestingLevel decremento l'offset corrispondente.
 				offset_0--;
 			} else {
 				offset--;
@@ -215,10 +217,10 @@ declist returns [ArrayList<Node> astlist]
 		FOOLParsingLib.addFunSTentryToSymbolTable(hm, $i.text, nestingLevel, $t.ast, 
 			nestingLevel == 0 ? offset_0 : offset, $i.line);
 		
-		// HIGH ORDER
+		// HIGHER ORDER
 		// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
 		// funzionale) occupa un offset doppio.
-	    if (nestingLevel == 0) {
+	    if (nestingLevel == 0) { //In base al nestingLevel decremento l'offset corrispondente.
 			offset_0-=2;
 		} else {
 			offset-=2;
@@ -229,17 +231,18 @@ declist returns [ArrayList<Node> astlist]
 		nestingLevel++;
 		HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
 		symTable.add(hmn); }
-	LPAR {
+	LPAR { //Creo la lista dei paramentri della funzione e setto l'offset dei parametri a 1.
 		ArrayList<Node> parTypes = new ArrayList<Node>();
 		int paroffset=1; }
 	(fid=ID COLON fht=hotype { 
 		parTypes.add($fht.ast);
 		f.addPar(new ParNode($fid.text,$fht.ast));
 		
-		// HIGH ORDER
+		// HIGHER ORDER
+		// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo funzionale)
+		// occupa un offset doppio:
 		if ($fht.ast instanceof ArrowTypeNode) {
-             paroffset++;	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
-						    // funzionale) occupa un offset doppio:
+             paroffset++;	
         }
         
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $fid.text, nestingLevel, $fht.ast, paroffset++, $fid.line);}
@@ -247,10 +250,11 @@ declist returns [ArrayList<Node> astlist]
 		parTypes.add($ht.ast);
         f.addPar(new ParNode($id.text,$ht.ast));
         
-        // HIGH ORDER
+        // HIGHER ORDER
+        // qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo funzionale)
+		// occupa un offset doppio:
         if ($ht.ast instanceof ArrowTypeNode) {
-             paroffset++;	// qualsiasi ID con tipo funzionale (vero ID di funzione oppure ID di variabile o parametro di tipo
-						    // funzionale) occupa un offset doppio:
+             paroffset++;	
         }
         
 		FOOLParsingLib.addParamSTentryToSymbolTable(hmn, $id.text, nestingLevel, $ht.ast, paroffset++, $id.line);}
@@ -258,7 +262,8 @@ declist returns [ArrayList<Node> astlist]
 	)? 
 	RPAR { 
 		
-		// HIGH ORDER
+		// HIGHER ORDER
+		// Aggiungo alla STentry il tipo completo della funzione (Lista dei tipi dei parametri e tipo di ritorno)
 		ArrowTypeNode completeType = new ArrowTypeNode(parTypes, $t.ast);
 		entry.addType(completeType); 
 		f.setSymType(completeType); // Imposto il symType per poterlo ritornare con getSymType
@@ -272,6 +277,7 @@ declist returns [ArrayList<Node> astlist]
     )+          
 	;
 
+//Nuovo tipo hotype, ora i tipi possono essere anche funzionali arrow.
 hotype	returns [Node ast]
   : t=type {$ast = $t.ast;} 
   | a=arrow	{$ast = $a.ast;}
@@ -284,6 +290,8 @@ type returns [Node ast]
 	}
 	;	
 
+// Tipo arrow ( Higher Order Extension )
+// Ritorna un ArrowTypeNode.
 arrow returns [Node ast]
 	: LPAR{
 		ArrayList<Node> arglist = new ArrayList<Node>();

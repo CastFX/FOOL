@@ -16,21 +16,7 @@ public class OrNode implements Node {
 		return s + "OR\n" + left.toPrint(s + "  ") + right.toPrint(s + "  ");
 	}
 
-	/**
-	 * @author Maicol
-	 * 
-	 *         TODO Don't consent the use with functional types ( High Order
-	 *         Extension )
-	 */
 	public Node typeCheck() {
-		if (left instanceof ArrowTypeNode) {
-			System.out.println("Invalid use of functional types " + left + " in left side of OR");
-			System.exit(0);
-		}
-		if (right instanceof ArrowTypeNode) {
-			System.out.println("Invalid use of functional types " + right + " in right side of OR");
-			System.exit(0);
-		}
 		Node l = left.typeCheck();
 		Node r = right.typeCheck();
 		if (!(l instanceof BoolTypeNode) || !(r instanceof BoolTypeNode)) {

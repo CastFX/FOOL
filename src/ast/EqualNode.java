@@ -19,7 +19,8 @@ public class EqualNode implements Node {
     public Node typeCheck() {
         Node l = left.typeCheck();
         Node r = right.typeCheck();
-    	//HIGH ORDER
+    	//HIGHER ORDER
+        //Non è consentito l'uso di espressioni exp-i con tipi funzionali. (Dovrei confrontare coppie di valori)
     	if (l instanceof ArrowTypeNode){ 
     		System.out.println("Invalid use of functional types "+l+" in left side of equal");
     	    System.exit(0);

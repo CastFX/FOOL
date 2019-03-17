@@ -16,27 +16,29 @@ public class LesserEqualNode implements Node {
 		return s + "LesserEqual\n" + left.toPrint(s + "  ") + right.toPrint(s + "  ");
 	}
 
-	/**
-	 * @author Maicol
-	 * 
-	 *         TODO Don't consent the use with functional types ( High Order
-	 *         Extension )
-	 */
+	//Don't consent the use of non-integer in binary operators.
 	public Node typeCheck() {
-		if (left instanceof ArrowTypeNode) {
-			System.out.println("Invalid use of functional types " + left + " in left side of lesser equal");
-			System.exit(0);
-		}
-		if (right instanceof ArrowTypeNode) {
-			System.out.println("Invalid use of functional types " + right + " in right side of lesser equal");
-			System.exit(0);
-		}
-		Node l = left.typeCheck();
-		Node r = right.typeCheck();
-		if (!(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l))) {
-			System.out.println("Incompatible types in lesser equal");
-			System.exit(0);
-		}
+//		Node l = left.typeCheck();
+//		Node r = right.typeCheck();
+//		
+//		if (!(l instanceof IntTypeNode)) {
+//			System.out.println("Invalid use of type " + l + " in left side of lesser equal");
+//			System.exit(0);
+//		}
+//		if (!(r instanceof IntTypeNode)) {
+//			System.out.println("Invalid use of type " + r + " in right side of lesser equal");
+//			System.exit(0);
+//		}
+//		
+//		if (!(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l))) {
+//			System.out.println("Incompatible types in lesser equal");
+//			System.exit(0);
+//		}
+		if (!(FOOLlib.isSubtype(left.typeCheck(), new IntTypeNode())
+	            && FOOLlib.isSubtype(right.typeCheck(), new IntTypeNode()))) {
+	        System.out.println("Non integers in lesser equal");
+	        System.exit(0);
+	    }
 		return new BoolTypeNode();
 	}
 

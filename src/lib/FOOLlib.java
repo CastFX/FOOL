@@ -33,7 +33,7 @@ public class FOOLlib {
                         && isRefSubtype(((RefTypeNode) a).getId(), ((RefTypeNode) b).getId()))
                 || ((a instanceof EmptyTypeNode) && (b instanceof RefTypeNode))
                 || ((a instanceof EmptyTypeNode) && (b instanceof EmptyTypeNode))
-                || (((a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode))
+                || (((a instanceof ArrowTypeNode) && (b instanceof ArrowTypeNode)) //Ora gestisce anche tipi funzionali ArrowTypeNode.
                        && isArrowSubtype((ArrowTypeNode) a,(ArrowTypeNode) b))
                 ;
     }
@@ -101,14 +101,16 @@ public class FOOLlib {
         }
         
         if ((thenExp instanceof ArrowTypeNode) && (elseExp instanceof ArrowTypeNode)) {
-			// Both are ArrowTypeNode
-			// Check if same number of parameters
+			// So entrambi tipi funzionali
 			ArrowTypeNode arrowA = (ArrowTypeNode) thenExp;
 			ArrowTypeNode arrowB = (ArrowTypeNode) elseExp;
+			// Controllo che abbiano lo stesso numero di parametri.
 			if (arrowA.getParList().size() == arrowB.getParList().size()) {
+				// Controllo se esiste un lowest common ancestor per i tipi di ritorno di a e b (in modo ricorsivo).
 				Node covariance = lowestCommonAncestor(arrowA.getRet(), arrowB.getRet());
 				ArrayList<Node> paramList = new ArrayList<>();
 				if ( covariance != null) {
+					//Se esiste il lowest common ancestor, controllo per ogni "i" che i tipi di parametro i-esimi siano uno sottotipo dell'altro.
 					for (int i = 0; i < arrowA.getParList().size(); i++) {
 						if (isSubtype(arrowA.getParList().get(i), arrowB.getParList().get(i))){
 							paramList.add(arrowA.getParList().get(i));
@@ -116,10 +118,13 @@ public class FOOLlib {
 							if (isSubtype(arrowB.getParList().get(i), arrowA.getParList().get(i))) {
 								paramList.add(arrowB.getParList().get(i));
 							} else {
+								//Se nessuno dei due è sottotipo allora ritorno null.
 								return null;
 							}
 						}
 					}
+					//Se il controllo ha successo torno un tipo funzionale che ha come tipo di ritorno il risultato della
+					//chiamata ricorsiva (covarianza) e come tipo di parametro i-esimo il tipo che è sottotipo dell'altro. (controvarianza).
 					return new ArrowTypeNode(paramList, covariance);
 				}
 			}
@@ -127,6 +132,9 @@ public class FOOLlib {
         return null;
     }
 
+    //Entrambi devono essere ArrowTypeNode con stesso numero di parametri e deve valere:
+    //Relazione di co-varianza sul tipo di ritorno
+    //Relazione di contro-varianza sul tipo dei parametri
     private static boolean isArrowSubtype(ArrowTypeNode a, ArrowTypeNode b) {
     	//Controllo covarianza del valore di ritorno
         if (!isSubtype(a.getRet(), b.getRet())) {

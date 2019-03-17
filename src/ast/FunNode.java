@@ -11,7 +11,7 @@ public class FunNode implements Node, DecNode {
     private ArrayList<Node> parlist = new ArrayList<Node>();
     private ArrayList<Node> declist = new ArrayList<Node>();
     private Node exp;
-    //HIGH ORDER
+    //Campo in cui memorizzare il tipo messo in symbol table.
     private Node symType;
 
     public FunNode(String i, Node t) {
@@ -70,22 +70,22 @@ public class FunNode implements Node, DecNode {
             declCode += dec.codeGeneration();
         String popDecl = "";
         
-        //HIGH ORDER
+        //HIGHER ORDER
         for (Node dec:declist) {
   		  if (dec instanceof DecNode) {
   			  if (((DecNode) dec).getSymType() instanceof ArrowTypeNode) {
-  				  //Dichiarazione di un ID di tipo funzionale
+  				  //Dichiarazione di un ID di tipo funzionale, devo deallocare due cose dallo stack, di conseguenza aggiungo una pop.
   				  popDecl+="pop\n";
   			  }
   		  }
   		  popDecl+="pop\n";
   	    }
-        //HIGH ORDER
+        //HIGHER ORDER
         String popParl = "";
         for (Node par:parlist) {
   		  if (par instanceof DecNode) {
   			  if (((DecNode) par).getSymType() instanceof ArrowTypeNode) {
-  				  // Parametro di tipo funzionale
+  				  // Parametro di tipo funzionale, devo deallocare due cose dallo stack, di conseguenza aggiungo una pop.
   				  popParl+="pop\n";
   			  }
   		  }
@@ -109,17 +109,22 @@ public class FunNode implements Node, DecNode {
                 "js\n" // salta a $ra
         );
         
-        //HIGH ORDER
+        //HIGHER ORDER
+        //Codice ritornato: due cose sono messe nello stack, nell'ordine:
+        //1. Indirizzo (fp) a questo AR (in reg $fp).
+        //2. (finisce a offset-1) indirizzo della funzione (etichetta generata).
         return "lfp\n"+ //Indir (fp) a questo AR (in reg $fp)
  			   "push "+ funl + "\n"; //Indir della funzione (etichetta generata)
     }
 
-    // HIGH ORDER
+    // HIGHER ORDER
+    // Ritorna il tipo messo in symbol table.
     @Override
     public Node getSymType() {
         return symType;
     }
     
+    // Setta il tipo prendendo il tipo messo in symbol table.
     public void setSymType(Node symType) {
 		this.symType = symType;
 	}

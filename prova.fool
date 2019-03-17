@@ -1,5 +1,9 @@
 let  
   class A() {}
-  var xxx:A = if (true) then {2} else {new A()};
+  class B extends A() {}
+  fun f:int() 3;
+  fun g:bool() true;
+  var a:A = new A();
+  var b:B = new B();
 in
-  print(xxx);  	
+  print(!(1<=1));  	
